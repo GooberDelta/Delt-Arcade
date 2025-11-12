@@ -20,6 +20,11 @@ This should work with any PnP (Plug n Play) RFID card reader.
 4. Run the script. If all goes well, you should be brought to the attract screen. Your console output (if you so choose) will output "Going to attract...", and you should see something like this:
 <img width="300" height="200" alt="Delt-DIY-Scanner Attract Screen" src="https://github.com/user-attachments/assets/e120f347-ad43-4b37-88b8-ff16afd62094" />
 
+## There's no Releases? How can I grab this?
+You can do 1 of 2 things. 
+- For the untested version, grab the latest code via going to `Code > Download ZIP`, use GitHub Desktop to grab the code from the repository, or use a Git client and run `git clone https://github.com/GooberDelta/Delts-DIY-Scanner/`
+- For the latest version pushed. Please go [here](https://github.com/GooberDelta/Delts-DIY-Scanner/releases) to get the latest build available.
+
 ## Extra Notes:
 ### Code edits: 
 **PLEASE READ: YOU NEED TO EDIT SOME PARTS OF THIS SCRIPT TO WORK WITH YOUR GAME OF CHOICE. AND THIS IS ONLY BUILT FOR WINDOWS. ANY OTHER VERSIONS ARE NOT OFFICIALLY SUPPORTED BY ME.**
