@@ -29,7 +29,7 @@ You can do 1 of 2 things.
 ### Code edits: 
 **PLEASE READ: YOU NEED TO EDIT SOME PARTS OF THIS SCRIPT TO WORK WITH YOUR GAME OF CHOICE. AND THIS IS ONLY BUILT FOR WINDOWS. ANY OTHER VERSIONS ARE NOT OFFICIALLY SUPPORTED BY ME.**
 
-<br><br>Some lines to edit:<br>
+Some lines to edit:<br>
 `(182) app_windows = pygetwindow.getWindowsWithTitle("Project Outfox") # REPLACE WITH YOUR GAME NAME, E.X STEPMANIA, ITGMANIA`<br>
 `(192) kb.press("[") # REPLACE "[" WITH YOUR INSERT CREDIT BUTTON!`<br>
 `(242) q1 = {"gameName": "OutFox"} # OutFox is the default set, but you can set this to something else. make it match your DB. `<br>
