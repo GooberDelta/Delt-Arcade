@@ -150,9 +150,11 @@
     async function loadApprovals() {
       try {
         const [users, cards] = await Promise.all([
-          apiCall('/admin/pending-users')
+          apiCall('/admin/pending-users'),
+          apiCall('/admin/pending-cards'),
         ]);
         renderPendingUsers(users);
+        renderPendingCards(cards);
       } catch (err) {
         showToast(err.message, 'error');
       }
