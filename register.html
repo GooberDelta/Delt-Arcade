@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/register.css"/>
+</head>
+<body>
+
+  <!-- BACKGROUND IMAGE
+       position:fixed keeps it covering the full viewport even on scroll.
+       object-fit:cover scales it like "fill the frame, crop if needed".
+       z-index:-1 puts it behind everything else on the page.
+       The dark overlay div on top dims it so text stays readable. -->
+  <div class="bg-wrap">
+    <img src="assets/bg.png" alt="" aria-hidden="true" class="bg-img" />
+    <div class="bg-overlay"></div>
+  </div>
+
+  <main>
+    <div class="register-card">
+
+      <!-- BRAND HEADER — identical to login for visual consistency -->
+      <div class="brand">
+        <div class="logo-mark"><img src="assets/logo.png" alt="Delt-Arcade logo" /></div>
+        <img src="assets/logo-text.png" alt="Delt-Arcade" style="height:36px;object-fit:contain;margin-top:0.25rem;"/>
+        <p>Create a Guest Account</p>
+      </div>
+
+      <!-- ── REGISTRATION FORM ── -->
+      <form id="registerForm" novalidate>
+
+        <!-- SECTION 1: ACCOUNT DETAILS
+             WHY split into sections? A 4-field form doesn't need it,
+             but labeling groups helps users understand what they're
+             filling in and why. -->
+        <div class="section-label">Account Details</div>
+
+        <!-- DISPLAY NAME
+             This is what shows in the dashboard — friendly, informal.
+             Separate from username so they can have "JohnnyArcade" as
+             display name and "john_doe" as login username. -->
+        <div class="form-group">
+          <label for="displayName">Display Name</label>
+          <div class="input-wrap" id="wrap-displayName">
+            <input type="text" id="displayName" name="displayName"
+              placeholder="How should we call you?"
+              autocomplete="name" />
+            <span class="icon" aria-hidden="true">✨</span>
+            <span class="status-icon" aria-hidden="true"></span>
+          </div>
+          <p class="field-hint" id="hint-displayName">Your name as it appears in the dashboard.</p>
+        </div>
+
+        <!-- USERNAME
+             Used to log in. We validate format client-side:
+             alphanumeric + underscores only, 3–20 chars.
+             The server also checks uniqueness. -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrap" id="wrap-username">
+            <input type="text" id="username" name="username"
+              placeholder="letters, numbers, underscores"
+              autocomplete="username" />
+            <span class="icon" aria-hidden="true">👤</span>
+            <span class="status-icon" aria-hidden="true"></span>
+          </div>
+          <p class="field-hint" id="hint-username">3–20 characters. Letters, numbers, and _ only.</p>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrap" id="wrap-email">
+            <input type="email" id="email" name="email"
+              placeholder="you@example.com"
+              autocomplete="email" />
+            <span class="icon" aria-hidden="true">✉️</span>
+            <span class="status-icon" aria-hidden="true"></span>
+          </div>
+          <p class="field-hint" id="hint-email"></p>
+        </div>
+
+        <!-- SECTION 2: SECURITY -->
+        <div class="section-label">Security</div>
+
+        <!-- PASSWORD with strength meter -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrap" id="wrap-password">
+            <input type="password" id="password" name="password"
+              placeholder="Min. 8 characters"
+              autocomplete="new-password" />
+            <span class="icon" aria-hidden="true">🔒</span>
+            <span class="status-icon" aria-hidden="true"></span>
+          </div>
+
+          <!-- Strength meter: 4 segments, colored by JS -->
+          <div class="strength-meter" id="strengthMeter">
+            <div class="seg"></div>
+            <div class="seg"></div>
+            <div class="seg"></div>
+            <div class="seg"></div>
+          </div>
+          <p class="strength-label" id="strengthLabel"></p>
+          <p class="field-hint" id="hint-password"></p>
+        </div>
+
+        <!-- CONFIRM PASSWORD
+             WHY have this? Two reasons:
+             1. Password fields are masked — typos are invisible
+             2. Forces the user to type it deliberately twice
+             We check client-side that they match before submitting. -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-wrap" id="wrap-confirmPassword">
+            <input type="password" id="confirmPassword" name="confirmPassword"
+              placeholder="Re-enter your password"
+              autocomplete="new-password" />
+            <span class="icon" aria-hidden="true">🔑</span>
+            <span class="status-icon" aria-hidden="true"></span>
+          </div>
+          <p class="field-hint" id="hint-confirmPassword"></p>
+        </div>
+
+        <!-- APPROVAL NOTICE
+             Sets expectation BEFORE they submit — not as a surprise after.
+             WHY: Users who know to expect a wait are less likely to
+             submit multiple times or think something went wrong. -->
+        <div class="pending-notice">
+          <span class="notice-icon">⏳</span>
+          <span>New accounts require <strong>admin approval</strong> before you can log in.
+          You'll be notified once your account is activated.</span>
+        </div>
+
+        <button type="submit" class="btn-primary" id="registerBtn">
+          Create Account
+        </button>
+
+        <div class="message" id="feedbackMsg" role="alert" aria-live="polite"></div>
+
+      </form>
+
+      <!-- SUCCESS PANEL — shown instead of the form after registration -->
+      <div class="success-panel" id="successPanel">
+        <div class="success-icon">✅</div>
+        <h2>Account Requested!</h2>
+        <p>
+          Your account for <strong id="successUsername"></strong> has been submitted
+          and is awaiting admin approval. You'll be able to log in once an
+          administrator activates your account.
+        </p>
+        <div class="pending-notice" style="text-align:left; width:100%;">
+          <span class="notice-icon">💡</span>
+          <span>If you don't hear back, reach out to the arcade administrator directly.</span>
+        </div>
+        <a href="/login" style="margin-top:0.5rem; color:var(--accent); font-weight:500; font-size:0.9rem; text-decoration:none;">
+          ← Back to Login
+        </a>
+      </div>
+
+      <p class="login-link" id="loginLinkRow">
+        Already have an account? <a href="/login">Sign in</a>
+      </p>
+
+    </div>
+  </main>
+
+  <footer>
+    Made with &hearts; by Delta, with some AI Assistance by <a href="https://anthropic.com" target="_blank">Anthropic's Claude</a>.
+  </footer>
+  <script src="js/register.js"></script>
+</body>
+</html>

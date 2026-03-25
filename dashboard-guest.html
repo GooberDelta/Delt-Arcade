@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Dashboard</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/dashboard-guest.css"/>
+</head>
+<body>
+
+  <div class="bg-wrap">
+    <img src="assets/bg.png" alt="" aria-hidden="true" class="bg-img"/>
+    <div class="bg-overlay"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <a href="/" style="display:flex;align-items:center;gap:0.85rem;text-decoration:none;">
+        <img src="assets/logo.png" alt="Delt-Arcade logo"/>
+        <img src="assets/logo-text.png" alt="Delt-Arcade" style="width:200px;object-fit:contain;"/>
+      </a>
+    </div>
+    <div class="header-right">
+      <!-- Only shown if the logged-in user is actually an admin -->
+      <a id="switchToAdmin" href="/dashboard-admin"
+        style="display:none; padding:0.4rem 0.9rem;
+        background:rgba(245,166,35,0.1);
+        border:1px solid rgba(245,166,35,0.3);
+        border-radius:var(--radius); color:var(--accent);
+        font-family:'DM Sans',sans-serif; font-size:0.8rem;
+        text-decoration:none; font-weight:500;
+        transition:all var(--transition);"
+        onmouseover="this.style.background='rgba(245,166,35,0.2)'"
+        onmouseout="this.style.background='rgba(245,166,35,0.1)'">
+        ⚙️ Admin Panel
+      </a>
+      <a class="avatar-btn" href="/account" id="avatarBtn">
+        <div class="avatar" id="headerAvatar">
+          <span id="avatarInitial">?</span>
+        </div>
+        <span id="guestName">—</span>
+      </a>
+      <button class="btn-logout" id="logoutBtn">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    <!-- WELCOME BANNER -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h2>Welcome back, <span id="welcomeName">—</span> 👋</h2>
+        <p id="welcomeStatus">Loading your arcade profile…</p>
+      </div>
+      <div class="balance-total">
+        <div class="label">Total Balance</div>
+        <div class="amount" id="totalBalance">—</div>
+        <div class="amount-sub">credits across all cards</div>
+      </div>
+    </div>
+
+    <!-- TWO-COLUMN GRID -->
+    <div class="dashboard-grid">
+
+      <!-- LEFT: CARDS -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">🃏 My Cards</div>
+        </div>
+
+        <!-- Card grid — populated by JS -->
+        <div class="cards-grid" id="cardsGrid">
+          <div class="loading-state"><span class="spinner"></span> Loading cards…</div>
+        </div>
+
+        <!-- Transaction drawer — sits below the grid, slides open per card -->
+        <div class="txn-drawer" id="txnDrawer">
+          <div class="txn-drawer-header">
+            <span id="txnDrawerTitle">Transaction History</span>
+            <button class="txn-drawer-close" onclick="closeDrawer()">✕</button>
+          </div>
+          <div id="txnDrawerBody"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: NEWS FEED -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">📰 Arcade News</div>
+        </div>
+        <div class="news-panel">
+          <div class="news-feed" id="newsFeed">
+            <div class="loading-state"><span class="spinner"></span> Loading…</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── ADD CARD MODAL ── -->
+  <div class="modal-overlay" id="addCardModal">
+    <div class="modal">
+      <div class="modal-title">🃏 Register a Card</div>
+
+      <label>Card UID</label>
+      <!-- WHY monospace + uppercase transform? UIDs are hex strings —
+           monospace makes them easier to read and type accurately. -->
+      <input type="text" id="newCardUid" placeholder="Scan or type your card UID"
+        style="font-family:monospace; text-transform:uppercase;"/>
+      <!-- Live duplicate check status — updates as user types -->
+      <div class="uid-status" id="uidStatus"></div>
+
+      <label>Nickname</label>
+      <input type="text" id="newCardNickname"
+        placeholder="e.g. My Arcade Card"/>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeAddCardModal()">Cancel</button>
+        <button class="btn btn-primary-sm" id="addCardSubmitBtn"
+          onclick="submitAddCard()">Register Card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REQUEST CREDITS MODAL ── -->
+  <div class="modal-overlay" id="creditsModal">
+    <div class="modal">
+      <div class="modal-title">💳 Request Credits</div>
+
+      <input type="hidden" id="creditsCardUid"/>
+
+      <label>Card</label>
+      <input type="text" id="creditsCardDisplay" readonly
+        style="color:var(--text-muted); cursor:default;"/>
+
+      <label>Select Amount</label>
+      <!-- Preset chips — user taps one, it highlights, amount is stored -->
+      <div class="credit-presets" id="creditPresets">
+        <div class="preset-chip" data-amount="10" onclick="selectPreset(this)">
+          10 <span class="chip-sub">credits</span>
+        </div>
+        <div class="preset-chip" data-amount="25" onclick="selectPreset(this)">
+          25 <span class="chip-sub">credits</span>
+        </div>
+        <div class="preset-chip" data-amount="50" onclick="selectPreset(this)">
+          50 <span class="chip-sub">credits</span>
+        </div>
+        <div class="preset-chip" data-amount="100" onclick="selectPreset(this)">
+          100 <span class="chip-sub">credits</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost"       onclick="closeCreditsModal()">Cancel</button>
+        <button class="btn btn-primary-sm"  id="creditsSubmitBtn"
+          onclick="submitCreditRequest()">Submit Request</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Made with &hearts; by Delta, with some AI Assistance by <a href="https://anthropic.com" target="_blank">Anthropic's Claude</a>.
+  </footer>
+  <script src="js/dashboard-guest.js"></script>
+</body>
+</html>

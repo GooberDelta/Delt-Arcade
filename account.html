@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/account.css"/>
+</head>
+<body>
+
+  <div class="bg-wrap">
+    <img src="assets/bg.png" alt="" aria-hidden="true" class="bg-img"/>
+    <div class="bg-overlay"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <a href="/" style="display:flex;align-items:center;gap:0.85rem;text-decoration:none;">
+        <img src="assets/logo.png" alt="Delt-Arcade logo"/>
+        <img src="assets/logo-text.png" alt="Delt-Arcade" style="height:36px;object-fit:contain;"/>
+      </a>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <a class="btn-back" id="backBtn" href="/dashboard-admin">← Dashboard</a>
+      <button class="btn-logout" id="logoutBtn">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main>
+    <div class="account-wrap">
+
+      <div class="page-title">⚙️ My Account</div>
+
+      <!-- ── SECTION 1: PROFILE PICTURE + IDENTITY ── -->
+      <div class="section-card">
+        <div class="section-head">👤 Profile</div>
+        <div class="section-body">
+          <div class="avatar-section">
+
+            <!-- Clicking the avatar opens the hidden file picker -->
+            <div class="avatar-large" id="avatarPreview" onclick="document.getElementById('avatarFileInput').click()">
+              <span id="avatarInitial">?</span>
+              <div class="avatar-overlay">
+                📷
+                <span>Change</span>
+              </div>
+            </div>
+
+            <!-- Hidden file input
+                 WHY accept only images? We're converting to base64 and storing
+                 in MongoDB — we don't want arbitrary file types in the DB.
+                 WHY no size limit in the input? We enforce it in JS (2MB max). -->
+            <input type="file" id="avatarFileInput"
+              accept="image/png, image/jpeg, image/webp, image/gif"/>
+
+            <div class="avatar-meta">
+              <div class="display-name-large" id="previewDisplayName">—</div>
+              <div class="username-muted" id="previewUsername">@—</div>
+              <div class="role-badge" id="previewRole">—</div>
+              <div class="avatar-hint">Click the photo to upload a new one.<br/>PNG, JPG, WebP or GIF · Max 2 MB</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION 2: PROFILE DETAILS ── -->
+      <div class="section-card">
+        <div class="section-head">✏️ Profile Details</div>
+        <div class="section-body">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldDisplayName">Display Name</label>
+              <input type="text" id="fieldDisplayName" placeholder="Your visible name"/>
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <!-- Username is read-only — changing it would break linked cards
+                   and transaction history that reference it by string. -->
+              <input type="text" id="fieldUsername" readonly
+                title="Username cannot be changed"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fieldEmail">Email Address</label>
+            <input type="email" id="fieldEmail" placeholder="you@example.com"/>
+          </div>
+
+          <button class="btn-save" id="saveProfileBtn" onclick="saveProfile()">
+            Save Profile
+          </button>
+          <div class="msg" id="profileMsg"></div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 3: CHANGE PASSWORD ── -->
+      <div class="section-card">
+        <div class="section-head">🔒 Change Password</div>
+        <div class="section-body">
+
+          <div class="form-group">
+            <label for="fieldCurrentPwd">Current Password</label>
+            <input type="password" id="fieldCurrentPwd"
+              placeholder="Enter your current password"
+              autocomplete="current-password"/>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldNewPwd">New Password</label>
+              <input type="password" id="fieldNewPwd"
+                placeholder="Min. 8 characters"
+                autocomplete="new-password"/>
+              <div class="strength-meter" id="pwdStrengthMeter">
+                <div class="seg"></div><div class="seg"></div>
+                <div class="seg"></div><div class="seg"></div>
+              </div>
+              <div class="strength-label" id="pwdStrengthLabel"></div>
+            </div>
+            <div class="form-group">
+              <label for="fieldConfirmPwd">Confirm New Password</label>
+              <input type="password" id="fieldConfirmPwd"
+                placeholder="Re-enter new password"
+                autocomplete="new-password"/>
+            </div>
+          </div>
+
+          <button class="btn-save" id="savePwdBtn" onclick="savePassword()">
+            Update Password
+          </button>
+          <div class="msg" id="pwdMsg"></div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 4: DANGER ZONE ── -->
+      <div class="section-card danger-zone">
+        <div class="section-head">⚠️ Session</div>
+        <div class="section-body" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div style="font-weight:500;margin-bottom:0.25rem;">Sign out of this device</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">
+              Clears your session token from this browser tab.
+            </div>
+          </div>
+          <button class="btn-save" id="logoutBtnDanger"
+            style="background:linear-gradient(135deg,var(--error),#b03030);">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    Made with &hearts; by Delta, with some AI Assistance by <a href="https://anthropic.com" target="_blank">Anthropic's Claude</a>.
+  </footer>
+  <script src="js/account.js"></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/dashboard-admin.css"/>
+</head>
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="bg-wrap">
+    <img src="assets/bg.png" alt="" aria-hidden="true" class="bg-img"/>
+    <div class="bg-overlay"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <a href="/" style="display:flex;align-items:center;gap:0.85rem;text-decoration:none;">
+        <img src="assets/logo.png" alt="Delt-Arcade logo"/>
+        <img src="assets/logo-text.png" alt="Delt-Arcade" style="width:200px;object-fit:contain;"/>
+      </a>
+      <span class="page-badge">Admin</span>
+    </div>
+    <div class="header-right">
+      <!-- Switch to guest mode without logging out -->
+      <a href="/dashboard-guest"
+        style="padding:0.4rem 0.9rem;
+        background:transparent;
+        border:1px solid var(--border);
+        border-radius:var(--radius); color:var(--text-muted);
+        font-family:'DM Sans',sans-serif; font-size:0.8rem;
+        text-decoration:none; font-weight:500;
+        transition:all var(--transition);"
+        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+        🎮 Guest Mode
+      </a>
+      <!-- Avatar pill links to account.html -->
+      <a class="avatar-btn" href="/account" id="avatarBtn">
+        <div class="avatar" id="headerAvatar">
+          <span id="avatarInitial">?</span>
+        </div>
+        <span id="adminName">—</span>
+      </a>
+      <button class="btn-logout" id="logoutBtn">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ── TAB NAV BAR ── -->
+  <nav class="tab-bar" role="tablist">
+    <button class="tab-btn active" data-tab="overview"      role="tab">📊 Overview</button>
+    <button class="tab-btn"        data-tab="approvals"     role="tab">
+      ⏳ Approvals
+      <span class="tab-badge hidden" id="pendingBadge">0</span>
+    </button>
+    <button class="tab-btn"        data-tab="users"         role="tab">👥 Users</button>
+    <button class="tab-btn"        data-tab="cards"         role="tab">🃏 Cards</button>
+    <button class="tab-btn"        data-tab="transactions"  role="tab">📋 Transactions</button>
+    <button class="tab-btn"        data-tab="credits"       role="tab">
+      💳 Credit Requests
+      <span class="tab-badge hidden" id="creditBadge">0</span>
+    </button>
+    <button class="tab-btn"        data-tab="news"          role="tab">📰 News</button>
+  </nav>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="content">
+
+    <!-- ════════════════════════════════════
+         TAB 1: OVERVIEW
+    ════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-overview">
+      <div class="section-title">📊 System Overview</div>
+
+      <!-- Stat cards row — populated by JS from /admin/stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-label">Total Guests</div>
+          <div class="stat-value" id="stat-totalUsers">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Approvals</div>
+          <div class="stat-value error" id="stat-pendingUsers">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Cards</div>
+          <div class="stat-value info" id="stat-activeCards">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Cards</div>
+          <div class="stat-value error" id="stat-pendingCards">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Credits Added</div>
+          <div class="stat-value success" id="stat-creditsAdded">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Credits Spent</div>
+          <div class="stat-value accent" id="stat-creditsSpent">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Transactions</div>
+          <div class="stat-value" id="stat-totalTxns">—</div>
+        </div>
+      </div>
+
+      <!-- Recent transactions preview (last 10) -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">🕐 Recent Transactions</div>
+          <button class="btn-refresh" onclick="loadOverview()">↻ Refresh</button>
+        </div>
+        <div id="recentTxnsBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         TAB 2: APPROVALS
+    ════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-approvals">
+      <div class="section-title">⏳ Pending Approvals</div>
+
+      <!-- Pending USERS -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">👤 Guest Accounts</div>
+          <button class="btn-refresh" onclick="loadApprovals()">↻ Refresh</button>
+        </div>
+        <div id="pendingUsersBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+
+    <!-- ════════════════════════════════════
+         TAB 3: USERS
+    ════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-users">
+      <div class="section-title">👥 All Guest Accounts</div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Guest Directory</div>
+          <button class="btn-refresh" onclick="loadUsers()">↻ Refresh</button>
+        </div>
+        <div id="allUsersBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         TAB 4: CARDS
+    ════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-cards">
+      <div class="section-title">🃏 All Cards</div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Card Registry</div>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn btn-primary-sm" onclick="openAddCardModal()">+ Add Card</button>
+            <button class="btn-refresh" onclick="loadCards()">↻ Refresh</button>
+          </div>
+        </div>
+        <div id="allCardsBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         TAB 5: TRANSACTIONS
+    ════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-transactions">
+      <div class="section-title">📋 Transaction History</div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">All Transactions</div>
+          <button class="btn-refresh" onclick="loadTransactions()">↻ Refresh</button>
+        </div>
+
+        <!-- FILTER BAR
+             Filters apply client-side on the already-fetched dataset.
+             "Refresh" re-fetches from the server with the current limit. -->
+        <div class="filter-bar">
+          <input type="text"   id="fCardUid"   placeholder="Card UID…"   style="width:130px"/>
+          <input type="text"   id="fUsername"  placeholder="Username…"   style="width:130px"/>
+          <input type="text"   id="fMachine"   placeholder="Machine…"    style="width:120px"/>
+          <select id="fType" style="width:110px">
+            <option value="">All Types</option>
+            <option value="credit">Credit</option>
+            <option value="debit">Debit</option>
+          </select>
+          <input type="date"   id="fDateFrom"  title="From date"/>
+          <input type="date"   id="fDateTo"    title="To date"/>
+          <button class="btn btn-primary-sm" onclick="applyFilters()">Apply</button>
+          <button class="btn btn-remove"     onclick="clearFilters()">Clear</button>
+        </div>
+
+        <div id="txnsBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         TAB 6: CREDIT REQUESTS
+    ════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-credits">
+      <div class="section-title">💳 Credit Requests</div>
+
+      <!-- Pending requests -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">⏳ Pending</div>
+          <button class="btn-refresh" onclick="loadCreditRequests()">↻ Refresh</button>
+        </div>
+        <div id="pendingCreditsBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+
+      <!-- Resolved requests (last 50) -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">✅ Recently Resolved</div>
+          <button class="btn-refresh" onclick="loadResolvedCredits()">↻ Refresh</button>
+        </div>
+        <div id="resolvedCreditsBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════
+         TAB 7: NEWS
+    ════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-news">
+      <div class="section-title">📰 Arcade News</div>
+
+      <!-- Compose new post -->
+      <div class="panel" style="margin-bottom:1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title">✏️ New Post</div>
+        </div>
+        <div style="padding:1.25rem; display:flex; flex-direction:column; gap:0.85rem;">
+          <div>
+            <label style="display:block;font-size:0.78rem;font-weight:600;
+              color:var(--text-muted);text-transform:uppercase;
+              letter-spacing:0.08em;margin-bottom:0.4rem;">Title</label>
+            <input type="text" id="newsTitle" placeholder="e.g. New Game Added — Galaga!"
+              style="width:100%;padding:0.65rem 0.85rem;background:var(--bg-input);
+              border:1.5px solid var(--border);border-radius:var(--radius);
+              color:var(--text-primary);font-family:'DM Sans',sans-serif;
+              font-size:0.9rem;outline:none;transition:border-color var(--transition);"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='var(--border)'"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.78rem;font-weight:600;
+              color:var(--text-muted);text-transform:uppercase;
+              letter-spacing:0.08em;margin-bottom:0.4rem;">Body</label>
+            <textarea id="newsBody" placeholder="Write your announcement here…"
+              rows="4"
+              style="width:100%;padding:0.65rem 0.85rem;background:var(--bg-input);
+              border:1.5px solid var(--border);border-radius:var(--radius);
+              color:var(--text-primary);font-family:'DM Sans',sans-serif;
+              font-size:0.9rem;outline:none;resize:vertical;
+              transition:border-color var(--transition);"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='var(--border)'"></textarea>
+          </div>
+          <div style="display:flex;justify-content:flex-end;">
+            <button class="btn btn-primary-sm" onclick="submitNewsPost()"
+              style="padding:0.6rem 1.5rem;">Publish Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Existing posts -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📋 Published Posts</div>
+          <button class="btn-refresh" onclick="loadNews()">↻ Refresh</button>
+        </div>
+        <div id="newsListBody">
+          <div class="loading-state"><span class="spinner"></span> Loading…</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── ADD CREDITS MODAL ── -->
+  <div class="modal-overlay" id="creditsModal">
+    <div class="modal">
+      <div class="modal-title">💳 Add Credits</div>
+      <input type="hidden" id="creditsCardUid"/>
+
+      <label>Card</label>
+      <input type="text" id="creditsCardDisplay" readonly
+        style="color:var(--text-muted); cursor:default;"/>
+
+      <label>Amount</label>
+      <input type="number" id="creditsAmount" placeholder="e.g. 50"
+        min="0.01" step="0.01"/>
+
+      <label>Note (optional)</label>
+      <textarea id="creditsNote" placeholder="e.g. Birthday bonus, purchased 50-credit pack…"></textarea>
+
+      <div class="modal-actions">
+        <button class="btn btn-remove"      onclick="closeCreditsModal()">Cancel</button>
+        <button class="btn btn-primary-sm"  onclick="submitCredits()">Add Credits</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ADD CARD MODAL ── -->
+  <div class="modal-overlay" id="addCardModal">
+    <div class="modal">
+      <div class="modal-title">🃏 Add New Card</div>
+
+      <label>Card UID</label>
+      <!-- WHY uppercase transform? Card UIDs from scanners are always
+           uppercase hex. Normalising here prevents mismatches. -->
+      <input type="text" id="newCardUid" placeholder="e.g. A3F92C01"
+        style="text-transform:uppercase; font-family:monospace;"/>
+
+      <label>Nickname</label>
+      <input type="text" id="newCardNickname" placeholder="e.g. John's Purple Card"/>
+
+      <!-- Service card toggle -->
+      <div style="display:flex;align-items:center;gap:0.6rem;
+        margin-top:0.9rem;padding:0.75rem 0.85rem;
+        background:rgba(251,191,36,0.07);
+        border:1px solid rgba(251,191,36,0.25);
+        border-radius:var(--radius);cursor:pointer;"
+        onclick="document.getElementById('newCardIsService').click()">
+        <input type="checkbox" id="newCardIsService"
+          style="width:16px;height:16px;accent-color:var(--accent);
+          cursor:pointer;flex-shrink:0;"
+          onclick="event.stopPropagation(); toggleServiceCard()"/>
+        <div>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">
+            ⚙️ Service Card
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.1rem;">
+            Bypasses credit debit. Cannot be claimed by guests.
+          </div>
+        </div>
+      </div>
+
+      <!-- Design always visible — service cards still get a design label -->
+      <label>Design</label>
+      <select id="newCardDesign" style="width:100%;padding:0.65rem 0.85rem;
+        background:var(--bg-input);border:1.5px solid var(--border);
+        border-radius:var(--radius);color:var(--text-primary);
+        font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;">
+        <option value="purple">🟣 Purple</option>
+        <option value="teal">🟦 Teal</option>
+      </select>
+
+      <!-- These fields are hidden when Service Card is checked -->
+      <div id="newCardGuestFields">
+        <label>Assign to User (optional)</label>
+        <!-- Custom user picker — shows avatar + display name + username -->
+        <div class="user-picker full-width" id="modalUserPicker">
+          <button type="button" class="user-picker-btn" onclick="toggleUserPicker('modalUserPicker')">
+            <div class="up-avatar" id="modalPickerAvatar">—</div>
+            <span id="modalPickerLabel">— Leave unassigned —</span>
+            <span style="margin-left:auto;opacity:0.5;font-size:0.7rem;">▾</span>
+          </button>
+          <div class="user-picker-panel" id="modalUserPickerPanel">
+            <input class="user-picker-search" placeholder="Search users…"
+              oninput="filterUserPicker('modalUserPicker', this.value)"/>
+            <div id="modalUserPickerOptions">
+              <div class="user-picker-empty">Loading…</div>
+            </div>
+          </div>
+        </div>
+        <!-- Hidden input carries the selected value -->
+        <input type="hidden" id="newCardOwner" value=""/>
+
+        <label>Starting Balance</label>
+        <input type="number" id="newCardBalance" placeholder="0" min="0" step="0.01" value="0"/>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-remove"     onclick="closeAddCardModal()">Cancel</button>
+        <button class="btn btn-primary-sm" onclick="submitAddCard()">Create Card</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Made with &hearts; by Delta, with some AI Assistance by <a href="https://anthropic.com" target="_blank">Anthropic's Claude</a>.
+  </footer>
+  <script src="js/dashboard-admin.js"></script>
+</body>
+</html>
