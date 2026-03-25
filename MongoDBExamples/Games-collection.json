@@ -1,9 +1,0 @@
-[{
-  "_id": {
-    "$oid": "690a73ef78b494cb2ab3f9a1"
-  },
-  "gameName": "OutFox",
-  "creditPrice": {
-    "$numberLong": "5"
-  }
-}]
