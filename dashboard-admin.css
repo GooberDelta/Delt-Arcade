@@ -1,0 +1,773 @@
+/* ── DESIGN TOKENS ── */
+    :root {
+      --bg-deep:       #0b0f1a;
+      --bg-card:       #111827;
+      --bg-input:      #1a2235;
+      --bg-row-hover:  #1a2540;
+      --border:        #1e2d45;
+      --accent:        #f5a623;
+      --accent-dim:    #c07d0f;
+      --text-primary:  #e8eaf0;
+      --text-muted:    #6b7a99;
+      --error:         #e05252;
+      --success:       #3ecf8e;
+      --info:          #3b9eff;
+      --purple:        #a855f7;
+      --teal:          #14b8a6;
+      --radius:        10px;
+      --transition:    0.2s ease;
+      --header-h:      64px;
+      --tab-bar-h:     48px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-wrap {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center; display: block;
+    }
+    .bg-overlay {
+      position: absolute; inset: 0;
+      background: rgba(11, 15, 26, 0.82);
+    }
+
+    /* ── TOP HEADER BAR ──
+       Fixed at the top — stays visible while content scrolls.
+       Contains logo, page title, admin name, and logout. */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(17, 24, 39, 0.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .header-left img {
+      width: 36px; height: 36px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(150,100,255,0.4));
+    }
+
+    .header-left .site-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .header-left .site-name span { color: var(--accent); }
+
+    .header-left .page-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--bg-deep);
+      background: var(--accent);
+      padding: 0.2rem 0.55rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .admin-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .admin-pill strong { color: var(--text-primary); }
+
+    .btn-logout {
+      padding: 0.4rem 0.9rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-logout:hover {
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    /* ── TAB NAV BAR ──
+       Sits just below the header. Each tab is a button.
+       The active tab has an amber underline indicator. */
+    .tab-bar {
+      position: fixed;
+      top: var(--header-h);
+      left: 0; right: 0;
+      height: var(--tab-bar-h);
+      background: rgba(17, 24, 39, 0.9);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: stretch;
+      padding: 0 1.75rem;
+      gap: 0.25rem;
+      z-index: 99;
+    }
+
+    .tab-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color var(--transition);
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover { color: var(--text-primary); }
+
+    /* Active tab: full-brightness text + amber bottom border */
+    .tab-btn.active {
+      color: var(--text-primary);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0.5rem; right: 0.5rem;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 99px;
+    }
+
+    /* Pending badge — red dot with a count on the Approvals tab */
+    .tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      background: var(--error);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 99px;
+      line-height: 1;
+    }
+    .tab-badge.hidden { display: none; }
+
+    /* ── MAIN CONTENT AREA ──
+       Padded below both fixed bars. Scrollable. */
+    .content {
+      margin-top: calc(var(--header-h) + var(--tab-bar-h));
+      flex: 1;
+      padding: 2rem 1.75rem;
+      max-width: 1200px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Tab panels — only the active one is visible */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* ── STAT CARDS (Overview tab) ──
+       A row of summary numbers at the top of the overview. */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      transition: border-color var(--transition);
+    }
+    .stat-card:hover { border-color: rgba(245,166,35,0.3); }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-value.accent { color: var(--accent); }
+    .stat-value.success { color: var(--success); }
+    .stat-value.error   { color: var(--error); }
+    .stat-value.info    { color: var(--info); }
+
+    .stat-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── PANEL CARD ──
+       Generic white-bordered container used throughout. */
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid rgba(30,45,69,0.5);
+      vertical-align: middle;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .data-table tbody tr {
+      transition: background var(--transition);
+      cursor: default;
+    }
+    .data-table tbody tr:hover { background: var(--bg-row-hover); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .empty-state .empty-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+    /* ── LOADING STATE ── */
+    .loading-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* ── BADGES / PILLS ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .badge-pending  { background: rgba(245,166,35,0.15);  color: var(--accent); }
+    .badge-approved { background: rgba(62,207,142,0.12);  color: var(--success); }
+    .badge-denied   { background: rgba(224,82,82,0.12);   color: var(--error); }
+    .badge-credit   { background: rgba(62,207,142,0.12);  color: var(--success); }
+    .badge-debit    { background: rgba(224,82,82,0.12);   color: var(--error); }
+    .badge-admin    { background: rgba(59,158,255,0.12);  color: var(--info); }
+    .badge-scanner  { background: rgba(168,85,247,0.12);  color: var(--purple); }
+    .badge-service  { background: rgba(251,191,36,0.12);  color: #fbbf24;
+                      border: 1px solid rgba(251,191,36,0.3); }
+
+    /* ── ACTION BUTTONS ── */
+    .btn {
+      padding: 0.35rem 0.8rem;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all var(--transition);
+    }
+    .btn-approve {
+      background: rgba(62,207,142,0.1);
+      border-color: rgba(62,207,142,0.3);
+      color: var(--success);
+    }
+    .btn-approve:hover { background: rgba(62,207,142,0.2); }
+
+    .btn-deny {
+      background: rgba(224,82,82,0.1);
+      border-color: rgba(224,82,82,0.3);
+      color: var(--error);
+    }
+    .btn-deny:hover { background: rgba(224,82,82,0.2); }
+
+    .btn-credits {
+      background: rgba(245,166,35,0.1);
+      border-color: rgba(245,166,35,0.3);
+      color: var(--accent);
+    }
+    .btn-credits:hover { background: rgba(245,166,35,0.2); }
+
+    .btn-remove {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+    .btn-remove:hover { border-color: var(--error); color: var(--error); }
+
+    .btn-primary-sm {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+      color: var(--bg-deep);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: none;
+    }
+    .btn-primary-sm:hover { opacity: 0.85; }
+
+    .action-group { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+    /* ── CARD VISUALS (card design preview) ──
+       Mini credit-card shaped elements showing the design colour. */
+    .card-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.6rem 0.25rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .card-chip-purple {
+      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(99,102,241,0.2));
+      border: 1px solid rgba(168,85,247,0.35);
+      color: #c084fc;
+    }
+    .card-chip-teal {
+      background: linear-gradient(135deg, rgba(20,184,166,0.2), rgba(6,182,212,0.2));
+      border: 1px solid rgba(20,184,166,0.35);
+      color: #2dd4bf;
+    }
+    .card-chip-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .card-chip-purple .card-chip-dot { background: #a855f7; }
+    .card-chip-teal   .card-chip-dot { background: #14b8a6; }
+
+    /* ── FILTER BAR (Transactions tab) ── */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(26,34,53,0.5);
+    }
+
+    .filter-bar input,
+    .filter-bar select {
+      padding: 0.45rem 0.75rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .filter-bar input:focus,
+    .filter-bar select:focus { border-color: var(--accent); }
+    .filter-bar select option { background: var(--bg-card); }
+
+    .filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.6);
+      cursor: pointer;
+    }
+
+    /* ── MODAL OVERLAY ──
+       Used for the "Add Credits" form. Appears on top of everything. */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    .modal-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+      margin-top: 0.9rem;
+    }
+    .modal label:first-of-type { margin-top: 0; }
+
+    .modal input, .modal textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .modal input:focus, .modal textarea:focus { border-color: var(--accent); }
+    .modal textarea { resize: vertical; min-height: 70px; }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .modal-actions .btn { flex: 1; padding: 0.6rem; font-size: 0.85rem; }
+
+    /* ── TOAST NOTIFICATION ──
+       Brief status message that appears bottom-right and fades out. */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.1rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      z-index: 300;
+      animation: toastIn 0.25s ease;
+      pointer-events: none;
+      max-width: 320px;
+    }
+    .toast.success { background: rgba(62,207,142,0.15); border: 1px solid rgba(62,207,142,0.4); color: var(--success); }
+    .toast.error   { background: rgba(224,82,82,0.15);  border: 1px solid rgba(224,82,82,0.4);  color: var(--error); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── REFRESH BUTTON ── */
+    .btn-refresh {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── MONOSPACE UID ── */
+    .uid { font-family: monospace; font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── AVATAR ── */
+    .avatar-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color var(--transition);
+    }
+    .avatar-btn:hover { border-color: var(--accent); }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--accent);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── SPINNER ── */
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(245,166,35,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── USER PICKER ──
+       A custom dropdown that replaces native <select> for owner assignment.
+       Shows avatar + display name + username for each user.
+       Implemented as a button that toggles a positioned panel. */
+    .user-picker { position: relative; display: inline-block; }
+
+    .user-picker-btn {
+      display: flex; align-items: center; gap: 0.45rem;
+      padding: 0.25rem 0.6rem 0.25rem 0.3rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: all var(--transition);
+      white-space: nowrap;
+      max-width: 180px;
+    }
+    .user-picker-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+    .user-picker-btn.has-value { color: var(--text-primary); }
+
+    /* Mini avatar inside the button */
+    .user-picker-btn .up-avatar {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem; font-weight: 700; color: var(--accent);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .user-picker-btn .up-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* The dropdown panel */
+    .user-picker-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 220px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 150;
+      overflow: hidden;
+      animation: fadeIn 0.15s ease;
+    }
+    .user-picker-panel.open { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Search box inside the panel */
+    .user-picker-search {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      background: var(--bg-input);
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .user-picker-search::placeholder { color: var(--text-muted); }
+
+    /* Each user row in the panel */
+    .user-picker-option {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.6rem 0.85rem;
+      cursor: pointer;
+      transition: background var(--transition);
+      border-bottom: 1px solid rgba(30,45,69,0.4);
+    }
+    .user-picker-option:last-child { border-bottom: none; }
+    .user-picker-option:hover { background: var(--bg-input); }
+
+    /* Avatar inside each option row */
+    .up-opt-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; color: var(--accent);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .up-opt-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .up-opt-info { flex: 1; min-width: 0; }
+    .up-opt-name {
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .up-opt-username {
+      font-size: 0.72rem; color: var(--text-muted);
+      margin-top: 0.05rem;
+    }
+
+    /* "Remove owner" special row */
+    .user-picker-option.remove-opt .up-opt-name { color: var(--error); }
+
+    /* Empty state inside panel */
+    .user-picker-empty {
+      padding: 1rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal version — full width trigger button */
+    .user-picker.full-width .user-picker-btn {
+      width: 100%;
+      max-width: none;
+      padding: 0.65rem 0.85rem;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      justify-content: flex-start;
+    }
+    .user-picker.full-width .user-picker-panel { width: 100%; }
