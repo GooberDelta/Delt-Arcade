@@ -1,4 +1,4 @@
-<img width="896" height="60" alt="text2-8" src="https://github.com/user-attachments/assets/a9f74ca7-d9f9-4d01-a983-5a4415838d3e" />
+<img width="5107" height="663" alt="logo-text" src="https://github.com/user-attachments/assets/f01d3b4b-f8bc-45a6-a6bc-4492f0bfd8cb" />
 
 ## A sideproject by Delta for home arcades to add immersion.
 > [!WARNING]
@@ -38,6 +38,9 @@ Some lines to edit:<br>
 I have tested this with this reader and card from Amazon. You could probably find a better one to use, but this project works great for any generic PnP (Plug N Play) RFID card reader.
 - [Card Reader](https://www.amazon.com/dp/B01MZYYDUV)
 - [Cards](https://www.amazon.com/dp/B0F295RX6D)
+
+### Credits
+Thanks to [@Uzziaheart on X/Twitter](https://x.com/Uzziaheart) for the logo! 
 
 ### Trello for Progress
 We now have a trello for Progress on this project. I would highly recommend viewing it if you find interest in this project.
