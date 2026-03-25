@@ -22,7 +22,7 @@
 #
 # SETUP INSTRUCTIONS:
 #   1. Install dependencies:
-#      pip install fastapi uvicorn pymongo python-jose[cryptography] passlib[bcrypt] python-dotenv bcrypt==4.0.1
+#      pip install fastapi uvicorn pymongo python-jose[cryptography] passlib[bcrypt] python-dotenv
 #      (if using bcrypt directly instead of passlib: pip install "bcrypt==4.0.1")
 #
 #   2. Create a .env file in the same directory with:
@@ -137,11 +137,11 @@ if assets_path.exists():
     app.mount("/assets", StaticFiles(directory=str(assets_path)), name="assets")
 
 css_path = HERE / "css"
-if assets_path.exists():
+if css_path.exists():
     app.mount("/css", StaticFiles(directory=str(css_path)), name="css")
 
 js_path = HERE / "js"
-if assets_path.exists():
+if js_path.exists():
     app.mount("/js", StaticFiles(directory=str(js_path)), name="js")
 # ── HTML page routes ──
 # Each returns the corresponding HTML file from the project folder.
@@ -563,16 +563,23 @@ def all_users(admin: dict = Depends(require_admin)):
 
 # ── GET /admin/cards ──
 # Admin only: list ALL cards regardless of status.
-# Cards with no owner (owner_username is None) are included —
-# the frontend checks for null/None rather than UID to show add-card flow.
 @app.get("/admin/cards")
 def all_cards(admin: dict = Depends(require_admin)):
     cards = list(db["cards"].find({}, {"_id": 0}))
-    # Normalise owner_username: convert None to null-safe empty string
-    # so the frontend can do a simple truthiness check
     for c in cards:
         if c.get("owner_username") is None:
-            c["owner_username"] = None   # Explicit None → JSON null
+            c["owner_username"] = None
+    return cards
+
+
+# ── GET /admin/pending-cards ──
+# Admin only: list cards that are pending approval.
+@app.get("/admin/pending-cards")
+def pending_cards(admin: dict = Depends(require_admin)):
+    cards = list(db["cards"].find(
+        {"approved": False, "denied": {"$ne": True}},
+        {"_id": 0}
+    ))
     return cards
 
 
