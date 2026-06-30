@@ -1,5 +1,5 @@
 body {
-  background-image: url("../assets/bg.png");
+  background-image: url("../assets/webpage/bg.png");
   background-repeat: no-repeat;
   background-size:cover;
   background-attachment:fixed;
@@ -8,12 +8,13 @@ body {
 }
 
 div.login {
+  display:flex;
+  flex-direction: column;
   position:absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
   justify-content:center;
-  height: 550px;
   width: 430px;
   border-radius: 25px;
   background-color: #454444;
@@ -21,7 +22,19 @@ div.login {
   text-align: center;
   float: center;
   align-items: center;
+  padding:30px;
   
+}
+
+#error_message {
+  border-color: #5f0101;
+  background-color: #990202;
+  color:white;
+  border-width: 3px;
+  border-radius: 13px;
+  border-style: solid;
+  width: 300px;
+  display: none;
 }
 
 img.logo {
@@ -44,13 +57,12 @@ p2 {
 
 
 label {
-  margin-bottom: 3%;
-  padding-right: 90px;
+  padding-right: 230px;
   display: block;
 }
 
 #login {
-  margin-top: 5%;
+  margin-top: 2%;
   width: 300px;
   border: 1px #48756d;
   background-color: #6bb4a7;
@@ -58,8 +70,17 @@ label {
   font-size: 30px;
 }
 
+#login:hover {
+  margin-top: 2%;
+  width: 300px;
+  border: 1px #48756d;
+  background-color: #518a7f;
+  border-radius: 5px;
+  font-size: 30px;
+}
+
 input {
-  width: 150px;
+  width: 300px;
   padding: 3px;
   background-color:#363636;
   border-color: #313030;
@@ -68,7 +89,7 @@ input {
 }
 
 a.registration-link {
-  margin-bottom: 100px;
+  margin-bottom: 20px;
   text-decoration: none;
   color: #6bb4a7;
 }
@@ -79,7 +100,11 @@ a.registration-link:hover {
 
 
 footer {
-  margin-top: 50%;
+  position: fixed;
+  bottom: 0;
+  left:0;
+  width: 100%;
+  z-index:-10000;
   border-top-style: solid;
   border-radius: 3px;
   border-width: 5px;
@@ -87,4 +112,8 @@ footer {
   justify-content: center;
   text-align: center;
   font-size:20px;
+}
+
+footer p {
+  padding: 10px;
 }
