@@ -1,363 +1,105 @@
-/* ─────────────────────────────────────────────
-       DESIGN TOKENS
-       Identical to login.html — keeping these in sync
-       means both pages feel like the same product.
-       In a larger project you'd pull these from a
-       shared CSS file rather than duplicating them.
-    ───────────────────────────────────────────── */
-    :root {
-      --bg-deep:      #0b0f1a;
-      --bg-card:      #111827;
-      --bg-input:     #1a2235;
-      --border:       #1e2d45;
-      --border-focus: #f5a623;
-      --accent:       #f5a623;
-      --accent-dim:   #c07d0f;
-      --text-primary: #e8eaf0;
-      --text-muted:   #6b7a99;
-      --error:        #e05252;
-      --success:      #3ecf8e;
-      --warn:         #f5a623;
+body {
+  background-image: url("../assets/bg.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-attachment:fixed;
+  color:aquamarine;
+  background-color: #242745;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-      /* Password strength levels */
-      --strength-weak:   #e05252;
-      --strength-fair:   #f5a623;
-      --strength-good:   #3b9eff;
-      --strength-strong: #3ecf8e;
+div.login {
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  justify-content:center;
+  height: 750px;
+  width: 430px;
+  border-radius: 25px;
+  background-color: #454444;
+  padding: 20px;
+  text-align: center;
+  float: center;
+  align-items: center;
+  
+}
 
-      --radius:     10px;
-      --transition: 0.2s ease;
-    }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+img.text {
+  margin-bottom: 5%;
+  filter: drop-shadow(3px 4px 4px #ad44dd)
+}
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background-color: var(--bg-deep);
-      color: var(--text-primary);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-image:
-        linear-gradient(rgba(245,166,35,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(245,166,35,0.03) 1px, transparent 1px);
+p1 {
+  font-size:29px;
+}
 
-    }
+p2 {
+  font-size: 18px;
+}
 
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-    }
 
-    /* ── REGISTER CARD ──
-       Slightly wider than login since we have more fields.
-       max-width: 460px gives breathing room without feeling sprawling. */
-    .register-card {
-      width: 100%;
-      max-width: 460px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2.5rem 2.25rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 60px rgba(245,166,35,0.04);
-      animation: slideUp 0.45s cubic-bezier(0.16,1,0.3,1) both;
-    }
+label {
+  margin-bottom: 3%;
+  padding-right: 240px;
+  display: block;
+}
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+label.email {
+  margin-bottom: 3%;
+  padding-right: 210px;
+  display: block;
+}
 
-    /* ── BRAND HEADER ── */
-    .brand { text-align: center; margin-bottom: 2rem; }
+label.dn {
+  margin-bottom: 3%;
+  padding-right: 215px;
+  display: block;
+}
 
-    .logo-mark {
-      width: 64px; height: 64px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1rem;
-    }
-    .logo-mark img {
-      width: 64px; height: 64px;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(150,100,255,0.35));
-    }
+label.rtpw {
+  margin-bottom: 3%;
+  padding-right: 185px;
+  display: block;
+}
 
-    .brand h1 {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em;
-    }
-    .brand h1 span { color: var(--accent); }
-    .brand p { margin-top: 0.35rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 300; }
+#register {
+  margin-top: 5%;
+  width: 300px;
+  border: 1px #48756d;
+  background-color: #6bb4a7;
+  border-radius: 5px;
+  font-size: 30px;
+}
 
-    /* ── SECTION DIVIDER LABEL ──
-       Visually groups the form into logical sections.
-       "Account Details" vs "Security" — helps users mentally
-       track where they are in a longer form. */
-    .section-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin: 1.5rem 0 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    /* No top margin on the first section label */
-    .section-label:first-of-type { margin-top: 0; }
+input {
+  width: 300px;
+  padding: 3px;
+  background-color:#363636;
+  border-color: #313030;
+  border-radius: 3px;
+  color: #ffffff;
+}
 
-    /* ── FORM ELEMENTS ── */
-    .form-group { margin-bottom: 1.1rem; }
+a.registration-link {
+  margin-bottom: 100px;
+  text-decoration: none;
+  color: #6bb4a7;
+}
 
-    label {
-      display: block;
-      font-size: 0.78rem; font-weight: 500;
-      color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin-bottom: 0.45rem;
-    }
+a.registration-link:hover {
+  text-decoration: underline;
+}
 
-    .input-wrap { position: relative; }
 
-    .input-wrap .icon {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); pointer-events: none;
-      font-size: 1rem; transition: color var(--transition);
-    }
-
-    /* Validation tick/cross — appears on the RIGHT side of the input.
-       We position it absolutely just like the left icon. */
-    .input-wrap .status-icon {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      font-size: 0.85rem;
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-    .input-wrap.valid   .status-icon { opacity: 1; }
-    .input-wrap.invalid .status-icon { opacity: 1; }
-
-    input[type="text"],
-    input[type="password"],
-    input[type="email"] {
-      width: 100%;
-      /* Right padding accounts for the status icon on the right */
-      padding: 0.75rem 2.5rem 0.75rem 2.75rem;
-      background: var(--bg-input);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text-primary);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-
-    input:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(245,166,35,0.12);
-    }
-    .input-wrap:focus-within .icon { color: var(--accent); }
-
-    /* Green border when field passes validation */
-    .input-wrap.valid input {
-      border-color: var(--success);
-    }
-    /* Red border when field fails validation (after user has typed) */
-    .input-wrap.invalid input {
-      border-color: var(--error);
-    }
-
-    /* Small hint text below a field — used for username rules, etc. */
-    .field-hint {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.35rem;
-      padding-left: 0.1rem;
-      min-height: 1rem; /* Reserve space so the form doesn't jump */
-      transition: color var(--transition);
-    }
-    .field-hint.error   { color: var(--error); }
-    .field-hint.success { color: var(--success); }
-
-    /* ── PASSWORD STRENGTH METER ──
-       WHY: Visual feedback is far more effective than a rules list.
-       Users adjust their password in real time rather than guessing
-       what "strong" means. Four segments fill left-to-right. */
-    .strength-meter {
-      display: flex;
-      gap: 4px;
-      margin-top: 0.5rem;
-    }
-
-    .strength-meter .seg {
-      flex: 1;
-      height: 3px;
-      border-radius: 99px;
-      background: var(--border);
-      transition: background 0.3s ease;
-    }
-
-    /* JavaScript adds data-strength="1|2|3|4" to .strength-meter,
-       and we use CSS attribute selectors to color the right segments. */
-    .strength-meter[data-strength="1"] .seg:nth-child(1) { background: var(--strength-weak); }
-
-    .strength-meter[data-strength="2"] .seg:nth-child(1),
-    .strength-meter[data-strength="2"] .seg:nth-child(2) { background: var(--strength-fair); }
-
-    .strength-meter[data-strength="3"] .seg:nth-child(1),
-    .strength-meter[data-strength="3"] .seg:nth-child(2),
-    .strength-meter[data-strength="3"] .seg:nth-child(3) { background: var(--strength-good); }
-
-    .strength-meter[data-strength="4"] .seg { background: var(--strength-strong); }
-
-    .strength-label {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 0.3rem;
-      text-align: right;
-      transition: color var(--transition);
-    }
-
-    /* ── SUBMIT BUTTON ── */
-    .btn-primary {
-      width: 100%; padding: 0.85rem; margin-top: 0.75rem;
-      background: linear-gradient(135deg, var(--accent), var(--accent-dim));
-      color: var(--bg-deep);
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700; font-size: 1rem;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      border: none; border-radius: var(--radius);
-      cursor: pointer;
-      transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
-      box-shadow: 0 4px 16px rgba(245,166,35,0.25);
-    }
-    .btn-primary:hover  { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,166,35,0.35); }
-    .btn-primary:active { transform: translateY(0); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    /* ── FEEDBACK MESSAGES ── */
-    .message {
-      display: none; align-items: flex-start; gap: 0.6rem;
-      padding: 0.85rem 1rem; border-radius: var(--radius);
-      font-size: 0.875rem; margin-top: 1rem;
-      line-height: 1.5;
-      animation: fadeIn 0.2s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .message.error   { display: flex; background: rgba(224,82,82,0.1);  border: 1px solid rgba(224,82,82,0.3);  color: var(--error); }
-    .message.success { display: flex; background: rgba(62,207,142,0.1); border: 1px solid rgba(62,207,142,0.3); color: var(--success); }
-
-    /* ── SUCCESS STATE ──
-       After a successful registration, we hide the form and show
-       a confirmation panel. Cleaner than an inline message. */
-    .success-panel {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 1rem 0;
-      gap: 1rem;
-      animation: fadeIn 0.3s ease;
-    }
-    .success-panel.visible { display: flex; }
-
-    .success-icon {
-      width: 64px; height: 64px;
-      background: rgba(62,207,142,0.1);
-      border: 2px solid var(--success);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.75rem;
-    }
-
-    .success-panel h2 {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.4rem; font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .success-panel p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 320px;
-    }
-
-    .success-panel p strong { color: var(--text-primary); }
-
-    /* ── PENDING NOTICE ──
-       A subtle info box explaining the approval step.
-       Sets expectations clearly so users don't re-register. */
-    .pending-notice {
-      display: flex;
-      gap: 0.6rem;
-      padding: 0.75rem 1rem;
-      background: rgba(245,166,35,0.07);
-      border: 1px solid rgba(245,166,35,0.2);
-      border-radius: var(--radius);
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-top: 0.5rem;
-    }
-    .pending-notice .notice-icon { font-size: 1rem; flex-shrink: 0; }
-
-    /* ── LOGIN LINK ── */
-    .login-link { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); }
-    .login-link a { color: var(--accent); text-decoration: none; font-weight: 500; transition: opacity var(--transition); }
-    .login-link a:hover { opacity: 0.75; text-decoration: underline; }
-
-    /* ── LOADING SPINNER ── */
-    .spinner {
-      display: inline-block; width: 16px; height: 16px;
-      border: 2px solid rgba(11,15,26,0.4); border-top-color: var(--bg-deep);
-      border-radius: 50%; animation: spin 0.7s linear infinite;
-      vertical-align: middle; margin-right: 6px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── FOOTER ── */
-    footer {
-      text-align: center; padding: 1.25rem;
-      font-size: 0.75rem; color: var(--text-muted);
-      border-top: 1px solid var(--border);
-    }
-    footer a { color: var(--accent); text-decoration: none; }
-
-    /* ── BACKGROUND IMAGE ── */
-    .bg-wrap {
-      position: fixed;
-      inset: 0;          /* shorthand for top/right/bottom/left: 0 */
-      z-index: -1;       /* sit behind all page content */
-      pointer-events: none;
-    }
-
-    .bg-img {
-      width: 100%; height: 100%;
-      object-fit: cover;     /* fill frame, crop edges if needed */
-      object-position: center;
-      display: block;
-    }
-
-    /* Semi-transparent overlay darkens the image so cards/text
-       stay legible no matter what bg.png contains.
-       Adjust the rgba alpha (0.6) lighter or darker to taste. */
-    .bg-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(11, 15, 26, 0.72);
-    }
+footer {
+  margin-top: 50%;
+  border-top-style: solid;
+  border-radius: 3px;
+  border-width: 5px;
+  border-color:aquamarine;
+  justify-content: center;
+  text-align: center;
+  font-size:20px;
+}
