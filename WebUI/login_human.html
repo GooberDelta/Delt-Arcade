@@ -2,28 +2,28 @@
 <html lang="">
   <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
-    <link rel="stylesheet" href="css/login_human.css">
+    <link rel="icon" type="image/png" href="/assets/webpage/favicon.png">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/js/login.js"></script>
     <title>Login | Delt-Arcade </title>
   </head>
   <body>
     <div class="login">
-      <img class="logo" src="/assets/logo.png" alt="Delt-Arcade Logo with Logo Only", style="height:100px"><br><br>
-      <img class="text" src="/assets/logo-text.png" alt="Delt-Arcade Logo with Name only", style="height:30px"> <br>
+      <img class="logo" src="/assets/webpage/logo.png" alt="Delt-Arcade Logo with Logo Only", style="height:100px"><br><br>
+      <img class="text" src="/assets/webpage/logo-text.png" alt="Delt-Arcade Logo with Name only", style="height:30px"> <br>
       <p1>At-Home Arcade Management System</p1><br><br><br>
-      <form action="/auth/login" method="post">
-        <label for="username">Username</label>
-        <input type="text", id="un", name="username"><br><br>
-        <label for="pw">Password</label>
-        <input type="password" id="pw", name="pw"><br><br>
-        <p class="registration-text">Are you a new User?</p>
-        <a class="registration-link" href="/register">Create an account</a>
-        <button name="Login" id="login">Log In</button>
-        </form>
-      
+      <label for="username">Username</label>
+      <input type="text", id="un", name="username"><br><br>
+      <label for="pw">Password</label>
+      <input type="password" id="pw", name="pw"><br><br>
+      <p class="registration-text">Are you a new User?</p>
+      <a class="registration-link" href="/register">Create an account</a>
+      <div id="error_message"><p>Error: Unknown Error</p></div>
+      <button name="Login" id="login", onclick="login()">Log In</button>
+      </div>
     </div>
   </body>
   <footer>
-    <p2>Made with ❤️ by DeltaDev</p2>
+    <p>Made with ❤️ by DeltaDev</p>
   </footer>
 </html>
