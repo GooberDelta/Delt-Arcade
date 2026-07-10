@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="../assets/webpage/favicon.png">
+    <link rel="stylesheet" href="/css/dashboard_overview.css">
+    <title>Overview | Delt-Arcade </title>
+  </head>
+  <body>
+      <ul>
+        <li><a href="/dashboard/overview">Overview</a></li>
+        <li><a href="/dashboard/cards">Your Cards</a></li>
+        <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><img src="/assets/webpage/dropdown_arrow.png"></button>
+          <div class="dd-content">
+            <a href="/dashboard/account">Account Settings</a>
+            <a href="/logout">Log Out</a>
+          </div>
+        </li>
+      </ul>
+  </body>
+  <div>
+    <div class="userOverview">
+      <h1>Welcome Back, {User}</h1>
+      <img style="float:left;height: 78px;" class="profile_picture_overview" src="/assets/profile_picture/default.png">
+      <h2 class="display">{Display_Name}</h2>
+      <h4 class="user">@{username}</h4>
+    </div>
+    <div class="cardOverview">
+      <h1>Your cards</h1>
+      <div class="Cards">
+        <p class="No_Card_Error"> There are no cards currently assigned to this profile.</p>
+        <a class="NCE_Link", href="/dashboard/cards">Go to Cards Dashboard</a>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>Made with ❤️ by DeltaDev</p>
+  </footer>
+</html>
+
