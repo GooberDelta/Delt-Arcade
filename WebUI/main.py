@@ -28,7 +28,7 @@ from dotenv import load_dotenv, dotenv_values
 from pydantic import BaseModel, Field
 from jose import jwt, JWTError
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, status, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -83,10 +83,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-class UserCreate(BaseModel):
+class RegisterUser(BaseModel):
     username: str = Field(..., min_length=3, max_length=20)
     password: str = Field(..., min_length=6)
-    display_name: Optional[str] = None
+    display_name: Optional[str] = "Delt-Arcade User"
+    email: str
 
 class UserPublic(BaseModel):
     username: str 
@@ -103,6 +104,58 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 app.mount("/css", StaticFiles(directory="css"), name="css")
 app.mount("/js", StaticFiles(directory="js"), name="js")
+
+
+
+# Scripts to help with things required for authentication
+def hash_password(password:str) -> str:
+    # Hashes password for whenever registration happens
+    return pwd_context.hash(password)
+
+def verify_password(plain: str, hashed: str) -> bool:
+    # Returns True or False whenever verified.
+    return pwd_context.verify(plain, hashed)
+
+def create_token(data: dict, expires_hours: int = TOKEN_EXPIRE_HOURS) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(hours=expires_hours)
+    to_encode.update({"exp":expire})
+    return jwt.encde(to_encode, SECRET_KEY, ALGORITHM)
+
+
+
+def get_user(username:str):
+    col = db.get_collection("UserData")
+    result = col.find_one({"username": username})
+    if result == None:
+        return False
+    else:
+        return result
+
+def authenticate_user(username:str, password:str) -> Optional[dict]:
+    user = get_user(username)
+    if user == False or not verify_password(password, user["hash"]):
+        return None
+    return user
+
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserPublic:
+    cred_exc = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Couldn't validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+        username: Optional[str] = payload.get("sub")
+        if username is None:
+            raise cred_exc
+    except JWTError:
+        raise cred_exc
+    user = get_user(username)
+    if not user:
+        raise cred_exc
+    return UserPublic(username=user["username"], display_name=user["displayname"])
+
 ## Pages (This is mainly hosting purposes.)
 @app.get("/", tags=["Hosting"])
 async def root():
@@ -110,19 +163,35 @@ async def root():
 
 @app.get("/login", tags=["Hosting"])
 async def login_page():
-    return FileResponse("login_human.html", media_type="text/html")
+    return FileResponse("login.html", media_type="text/html")
 
 @app.get("/register", tags=["Hosting"])
 async def registration_page():
+    return FileResponse("register_human.html", media_type="text/html")
+
+@app.get("/register-ai", tags=["Hosting"])
+async def registration_page():
     return FileResponse("register.html", media_type="text/html")
 
-@app.get("/dashboard-admin", tags=["Hosting"])
-async def admin_dashboard():
-    return FileResponse("dashboard-admin.html", media_type="text/html")
+@app.get("/dashboard", tags=["Hosting"])
+async def dashboard_redirect():
+    return RedirectResponse(url="/dashboard/overview")
 
-@app.get("/dashboard-guest", tags=["Hosting"])
-async def guest_dashboard():
-    return FileResponse("dashboard-guest.html", media_type="text/html")
+@app.get("/dashboard/overview", tags=["Hosting"])
+async def admin_dashboard():
+    return FileResponse("dashboard_overview.html", media_type="text/html")
+
+@app.get("/dashboard/account", tags=["Hosting"])
+async def admin_dashboard():
+    return FileResponse("dashboard_account.html", media_type="text/html")
+
+@app.get("/dashboard/cards", tags=["Hosting"])
+async def admin_dashboard():
+    return FileResponse("dashboard_cards.html", media_type="text/html")
+
+@app.get("/dashboard/admin", tags=["Hosting"])
+async def admin_dashboard():
+    return FileResponse("dashboard_overview.html", media_type="text/html")
 
 @app.get("/account", tags=["Hosting"])
 async def account_page():
@@ -135,3 +204,18 @@ async def login_function(username:str, pw:str):
     print("Not available as of right now.")
     raise HTTPException(401, detail="Unauthorized.")
 
+@app.post("/auth/register")
+async def register_function(body:RegisterUser):
+    try:    
+        hashed = hash_password(body.password)
+        try:
+            col = db.get_collection("User_Data")
+        except:
+            raise HTTPException(403, detail="Couldn't connect to DB.")
+        col.insert_one({"username":body.username, "hash":hashed,"email":body.email, "displayName":body.display_name})
+    except:
+        raise HTTPException(500, detail="Internal Server Error.")
+
+@app.post("/auth/me", response_model=UserPublic)
+def read_me(current_user: UserPublic = Depends(get_current_user)):
+    return current_user
