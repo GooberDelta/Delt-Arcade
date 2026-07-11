@@ -1,7 +1,9 @@
+let uri = "http://127.0.0.1:8000"
+
 function register() {
 	// Form Areas.
 	let username = document.getElementById("username");
-	let displayName = document.getElementById("dn");
+	let displayName = document.getElementById("displayname");
 	let email = document.getElementById("email");
 	let pw = document.getElementById("pw");
 	let rtpw = document.getElementById("rtpw");
@@ -38,8 +40,10 @@ function register() {
 		errmsg.textContent = "The passwords do not match.";
 	}
 	console.log("Registration test passed!")
+
+	// Sending Data to backend.
 	errmsg.style.display = "none";
-	const response = fetch(uri + "/auth/login", {
+	const response = fetch(uri + "/auth/register", {
       method: "POST",
       body: JSON.stringify({
         username:username.value, 
@@ -51,4 +55,6 @@ function register() {
         "Content-type": "application/json; charset=UTF-8"
       }
     })
+    console.log("Sent Data in a POST request.")
+
 }

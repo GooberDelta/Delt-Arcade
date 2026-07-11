@@ -227,7 +227,7 @@ async def login_function(body:LoginUser):
 async def register_function(body:RegisterUser):
     user_col = db["UserData"]
     # Check for email, and if one is found, send an error.
-    if user_col.find_one({email: body.email}):
+    if user_col.find_one({"email": body.email}):
         raise HTTPException(status_code=400, detail="Email is already in use.")
     # Checks for username, if one is found, send an error.
     if user_col.find_one({username: body.username}):
