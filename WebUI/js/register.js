@@ -37,8 +37,18 @@ function register() {
 		errmsg.style.display = "block";
 		errmsg.textContent = "The passwords do not match.";
 	}
-	else {
-		console.log("Registration test passed!")
-		errmsg.style.display = "none";
-	}
+	console.log("Registration test passed!")
+	errmsg.style.display = "none";
+	const response = fetch(uri + "/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        username:username.value, 
+        password:pw.value,
+        display_name:displayName.value,
+        email:email.value 
+        }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
 }
