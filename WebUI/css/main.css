@@ -1,0 +1,28 @@
+body {
+  background-image: url("../assets/webpage/bg.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-attachment:fixed;
+  color:aquamarine;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left:0;
+  width: 100%;
+  z-index:-10000;
+  border-top-style: solid;
+  border-radius: 3px;
+  border-width: 5px;
+  border-color:aquamarine;
+  justify-content: center;
+  text-align: center;
+  font-size:20px;
+}
+
+footer p {
+  padding: 10px;
+}

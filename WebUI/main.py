@@ -26,7 +26,8 @@ from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from dotenv import load_dotenv, dotenv_values
 from pydantic import BaseModel, Field
-from jose import jwt, JWTError
+import jwt
+from jwt import PyJWTError
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter, HTTPException, status, Depends
 from fastapi.staticfiles import StaticFiles
@@ -84,14 +85,18 @@ app.add_middleware(
 )
 
 class RegisterUser(BaseModel):
+    username: str
+    password: str
+    display_name: Optional[str] = "Delt-Arcade User"
+    email: str 
+
+class LoginUser(BaseModel):
     username: str = Field(..., min_length=3, max_length=20)
     password: str = Field(..., min_length=6)
-    display_name: Optional[str] = "Delt-Arcade User"
-    email: str
 
 class UserPublic(BaseModel):
     username: str 
-    display_name: Optional[str] = None
+    display_name: Optional[str] = "Delt-Arcade User"
 
 class Token(BaseModel):
     access_token: str
@@ -149,7 +154,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserPublic:
         username: Optional[str] = payload.get("sub")
         if username is None:
             raise cred_exc
-    except JWTError:
+    except PyJWTError:
         raise cred_exc
     user = get_user(username)
     if not user:
@@ -200,10 +205,27 @@ async def account_page():
 ## Authentication
 
 @app.post("/auth/login")
-async def login_function(username:str, pw:str):
-    print("Not available as of right now.")
-    raise HTTPException(401, detail="Unauthorized.")
+async def login_function(body:LoginUser):
+    try:    
+        try:
+            # Trying to Connect to server
+            col = db.get_collection("User_Data")
+        except:
+            raise HTTPException(403, "Couldn't connect to DB")
+        try:
+            # Attempting to check the user.
+            results = col.find_one({"username":body.username})
+            if results != None:
+                # Check the username.
+                if results["username"] == body.username:
+                    # Check the password now.
+                    if pwd_context.verify(body.password.encode(),results["hash"]):
+                        create_token()
 
+        except:
+            raise HTTPException(403, "Incorrect Username or password.")
+    except:
+        raise HTTPException(500, "Internal Server Error")
 @app.post("/auth/register")
 async def register_function(body:RegisterUser):
     try:    
@@ -212,7 +234,10 @@ async def register_function(body:RegisterUser):
             col = db.get_collection("User_Data")
         except:
             raise HTTPException(403, detail="Couldn't connect to DB.")
-        col.insert_one({"username":body.username, "hash":hashed,"email":body.email, "displayName":body.display_name})
+        col.insert_one({"username":body.username, 
+            "hash":hashed,
+            "email":body.email, 
+            "displayName":body.display_name})
     except:
         raise HTTPException(500, detail="Internal Server Error.")
 

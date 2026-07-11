@@ -1,6 +1,30 @@
+let uri = "http://127.0.0.1:8000"
+
 function login() {
-    // This has not been coded yet, so just display an error while attempting to login.
     let errmsg = document.getElementById("error_message");
-    errmsg.style.display = "block";
-    errmsg.textContent = "404: Login has not been coded"
+    let userbody = document.getElementById("un");
+    let passbody = document.getElementById("pw");
+    const response = fetch(uri + "/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        username:userbody.value, 
+        password:passbody.value 
+        }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    if (response == "200 OK") {
+      window.location.href = uri + "/dashboard/overview"
+    }
+    else if (response == "401 Unauthorized") {
+      errmsg.style.display = "block";
+      errmsg.textContent = "The server cannot be reached, please check the console for more information."
+      console.error("The server responded with 401.")
+    }
+    else {
+      errmsg.style.display = "block";
+      errmsg.textContent = "The server cannot be reached, please check the console for more information."
+      console.error("Couldn't Connect to server.")
+    }
 }
