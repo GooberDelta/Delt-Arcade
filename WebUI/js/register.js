@@ -5,8 +5,22 @@ function register() {
 	let email = document.getElementById("email").value;
 	let pw = document.getElementById("pw").value;
 	let rtpw = document.getElementById("rtpw").value;
-	//Error messages.
+	//Error message.
 	let errmsg = document.getElementById("error_message");
+	
+
+	// Checking for any non-filled out info.
+	if (username = "") {
+		console.error("Username isn't filled out.");
+		errmsg.style.display = "block";
+		errmsg.textContent = "A username is required.";
+	}
+	else if (email = "") {
+		console.error("Email isn't filled out.");
+		errmsg.style.display = "block";
+		errmsg.textContent = "An Email is required.";
+	}
+	else if ()
 	// Checking for email
 	if (email.includes("@")) {
 		console.log("email is a real email.")
