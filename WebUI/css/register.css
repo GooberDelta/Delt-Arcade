@@ -13,7 +13,7 @@ div.login {
   text-align: center;
   float: center;
   align-items: center;
-  overflow: visible;
+  overflow: scroll;
 }
 
 #error_message {
@@ -24,6 +24,7 @@ div.login {
   border-radius: 13px;
   border-style: solid;
   width: 300px;
+  padding; 20px;
   display: none;
 }
 
