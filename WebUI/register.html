@@ -5,7 +5,7 @@
     <link rel="icon" type="image/png" href="/assets/webpage/favicon.png">
     <link rel="stylesheet" href="/css/register.css">
     <link rel="stylesheet" href="/css/main.css">
-    <script href="/js/register.js"></script>
+    <script src="/js/register.js"></script>
     <title>Register | Delt-Arcade </title>
   </head>
   <body>
@@ -22,9 +22,10 @@
         <input type="password" id="pw", name="pw"><br><br>
         <label for="pw", class="rtpw">Retype Password</label>
         <input type="password" id="rtpw", name="rtpw"><br><br>
+        <div id="error_message"><p>Error: Unknown Error</p></div>
         <p class="registration-text">Already have an account?</p>
         <a class="registration-link" href="/login">Login to an account</a>
-        <button name="register" id="register"> Register</button>
+        <button name="register" id="register", onclick="register()"> Register</button>
       
     </div>
   </body>

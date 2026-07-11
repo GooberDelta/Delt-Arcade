@@ -5,7 +5,7 @@ div.login {
   left: 50%;
   transform: translate(-50%,-50%);
   justify-content:center;
-  height: 750px;
+  height: fit-content;
   width: 430px;
   border-radius: 25px;
   background-color: #454444;
@@ -13,9 +13,19 @@ div.login {
   text-align: center;
   float: center;
   align-items: center;
-  
+  overflow: visible;
 }
 
+#error_message {
+  border-color: #5f0101;
+  background-color: #990202;
+  color:white;
+  border-width: 3px;
+  border-radius: 13px;
+  border-style: solid;
+  width: 300px;
+  display: none;
+}
 
 img.text {
   margin-bottom: 5%;

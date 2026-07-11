@@ -7,7 +7,7 @@ function register() {
 	//Error messages.
 
 	// Let's make sure the passwords are the same.
-	if pw.value() == rtpw.value() {
+	if (pw.value() == rtpw.value()) {
 		console.log("Passwords were verified.")
 	}
 	else {
