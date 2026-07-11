@@ -46,7 +46,7 @@ ALGORITHM = "HS256" # Setting an algorithm to encode in for login tokens.
 TOKEN_EXPIRE_HOURS = 8 # Change this based on how long you want tokens to expire.
 
 #Mongo DB Work
-client = pymongo.MongoClient(MONGO_URI)
+client = pymongo.MongoClient("mongodb://100.127.8.21:27017")
 db = client.get_database('delt-arcade')
 
 
@@ -206,7 +206,7 @@ async def login_function(body:LoginUser):
     try:    
         try:
             # Trying to Connect to server
-            col = db.get_collection("User_Data")
+            col = db.get_collection("userData")
         except:
             raise HTTPException(403, "Couldn't connect to DB")
         try:

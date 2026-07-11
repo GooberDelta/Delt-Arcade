@@ -14,12 +14,13 @@ function login() {
         "Content-type": "application/json; charset=UTF-8"
       }
     })
+    console.log(response.status);
     if (response == "200 OK") {
       window.location.href = uri + "/dashboard/overview"
     }
     else if (response == "401 Unauthorized") {
       errmsg.style.display = "block";
-      errmsg.textContent = "The server cannot be reached, please check the console for more information."
+      errmsg.textContent = "Unauthorized"
       console.error("The server responded with 401.")
     }
     else {
