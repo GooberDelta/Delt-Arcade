@@ -34,6 +34,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
+import bcrypt
 
 
 # Dotenv loading...
@@ -172,10 +173,6 @@ async def login_page():
 
 @app.get("/register", tags=["Hosting"])
 async def registration_page():
-    return FileResponse("register_human.html", media_type="text/html")
-
-@app.get("/register-ai", tags=["Hosting"])
-async def registration_page():
     return FileResponse("register.html", media_type="text/html")
 
 @app.get("/dashboard", tags=["Hosting"])
@@ -220,7 +217,7 @@ async def login_function(body:LoginUser):
                 if results["username"] == body.username:
                     # Check the password now.
                     if verify_password(body.password, results["hash"]):
-                        create_token()
+                        return create_token()
 
         except:
             raise HTTPException(403, "Incorrect Username or password.")
@@ -228,19 +225,26 @@ async def login_function(body:LoginUser):
         raise HTTPException(500, "Internal Server Error")
 @app.post("/auth/register")
 async def register_function(body:RegisterUser):
-    try:    
-        hashed = hash_password(body.password)
-        try:
-            col = db.get_collection("User_Data")
-        except:
-            raise HTTPException(403, detail="Couldn't connect to DB.")
-        col.insert_one({"username":body.username, 
-            "hash":hashed,
-            "email":body.email, 
-            "displayName":body.display_name})
-    except:
-        raise HTTPException(500, detail="Internal Server Error.")
+    user_col = db["UserData"]
+    # Check for email, and if one is found, send an error.
+    if user_col.find_one({email: body.email}):
+        raise HTTPException(status_code=400, detail="Email is already in use.")
+    # Checks for username, if one is found, send an error.
+    if user_col.find_one({username: body.username}):
+        raise HTTPException(status_code=400, detail="Username is already in use.")
 
-@app.post("/auth/me", response_model=UserPublic)
-def read_me(current_user: UserPublic = Depends(get_current_user)):
-    return current_user
+    # Start building the things needed for the account
+    hashed_pw = bcrypt.hashpw(body.password.encode(), bcrypt.gensalt())
+    uid = str(uuid.uuid4())
+    token = jwt.encode({"userid":uid}, SECRET_KEY, algorithm=ALGORITHM)
+
+    user_col.insert_one({
+        "user_id": uid,
+        "email": body.email,
+        "password": hashed_pw.decode(),
+        "token": token,
+        "displayname": user.display_name,
+        "username": body.username
+        })
+    return {"token": token, "user_id": user_id}
+
