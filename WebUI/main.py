@@ -219,7 +219,7 @@ async def login_function(body:LoginUser):
                 # Check the username.
                 if results["username"] == body.username:
                     # Check the password now.
-                    if pwd_context.verify(body.password.encode(),results["hash"]):
+                    if verify_password(body.password, results["hash"]):
                         create_token()
 
         except:

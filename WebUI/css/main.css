@@ -13,7 +13,7 @@ footer {
   bottom: 0;
   left:0;
   width: 100%;
-  z-index:-10000;
+  z-index:-100;
   border-top-style: solid;
   border-radius: 3px;
   border-width: 5px;
@@ -25,4 +25,106 @@ footer {
 
 footer p {
   padding: 10px;
+}
+
+/* Dropdown content */
+.dd-content {
+  display: none;
+  position: absolute;
+  width: 200px;
+  background-color: #05a583;
+  height: 80px;
+  text-align: left;
+}
+
+/* Links inside dropdown content */
+.dd-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dd-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Show the dropdown content on hover */
+.accountbtn:hover .dd-content {
+  display: block;
+}
+
+/* Change background color of dropdown button on hover */
+.accountbtn:hover {
+  background-color: #05a583;
+}
+
+button.accountbtn {
+  float: flex;
+}
+
+h2 {
+  text-align: left;
+  margin-left: 125px;
+}
+
+h4 {
+  text-align: left;
+  margin-left: 125px;
+}
+
+img.profile_picture {
+  clip-path: circle(50%);
+  height: 32px;
+}
+
+img.profile_picture_overview {
+  clip-path: circle(50%);
+  height: 78px;
+  margin-left: 15px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+  background-color:#07d4a8;
+}
+
+a.NCE_Link {
+  margin-top: 5%;
+  width: 300px;
+  border: 1px #48756d;
+  background-color: #6bb4a7;
+  border-radius: 5px;
+  font-size: 30px;
+  text-decoration: none;
+  color: black;
+  align-items: center;
+  float: flex;
+}
+
+
+ul li {
+  float: left;
+}
+ul li a {
+  display:block;
+  color:black;
+  text-align: center;
+  border-radius: 3px;
+  text-decoration: none;
+  padding: 10px;
+}
+
+ul li a:hover {
+  padding: 10px;
+  background-color: #05a583;
+}
+
+ul li a:active {
+  background-color: #03ffcd;
 }
