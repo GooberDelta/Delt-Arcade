@@ -14,10 +14,20 @@ div.default-message {
 
 #menubutton {
    background-color:#07d4a8;
-   font-size: 18;
+   border:hidden;
+   font-size: 20px;
+   margin-top: 5%;
+   width: 150px;
+   border: 1px #48756d;
+   border-radius: 5px;
+   text-decoration: none;
+   color: black;
+   align-items: center;
+   float: flex;
 }
 
 #menubutton:hover {
    background-color: #05a583;
+   
 
 }
