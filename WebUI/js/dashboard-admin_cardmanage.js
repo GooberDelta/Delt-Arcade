@@ -1,5 +1,3 @@
-// Simply just redirecting. Will be fixed and we won't need a bunch of JS files (hopefully)
-
 function cardmanagement() {
     window.location.href = "/admin/card-manager"
 }

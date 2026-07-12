@@ -147,6 +147,26 @@ async def admin_dashboard():
 async def account_page():
     return FileResponse("account.html", media_type="text/html")
 
+@app.get("/admin", tags=["Hosting"])
+async def root():
+    return FileResponse("dashboard_admin_root.html", media_type="text/html")
+
+@app.get("/admin/card-manager", tags=["Hosting"])
+async def root():
+    return FileResponse("dashboard_admin_cardmanage.html", media_type="text/html")
+
+@app.get("/admin/account-manager", tags=["Hosting"])
+async def root():
+    return FileResponse("dashboard_admin_accountmanage.html", media_type="text/html")
+
+@app.get("/admin/game-manager", tags=["Hosting"])
+async def root():
+    return FileResponse("dashboard_admin_cardmanage.html", media_type="text/html")
+
+@app.get("/admin/arcade-manager", tags=["Hosting"])
+async def root():
+    return FileResponse("dashboard_admin_arcademanage.html", media_type="text/html")    
+
 ## Authentication
 
 @app.post("/auth/login")

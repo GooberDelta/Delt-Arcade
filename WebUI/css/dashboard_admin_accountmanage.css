@@ -1,0 +1,35 @@
+div.default-message {
+  display:flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background-color: #595959;
+  border-radius: 10px;
+  margin-top: 2%;
+  float:right;
+  border-style: hidden;
+  height: 50%;
+  width: 90%;
+}
+
+#menubutton {
+   background-color:#07d4a8;
+   border:hidden;
+   font-size: 20px;
+   margin-top: 5%;
+   width: 150px;
+   border: 1px #48756d;
+   border-radius: 5px;
+   text-decoration: none;
+   color: black;
+   align-items: center;
+   float: flex;
+}
+
+#menubutton:hover {
+   background-color: #05a583;
+   
+
+}

@@ -100,7 +100,8 @@ ul {
 
 a.NCE_Link {
   margin-top: 5%;
-  width: 300px;
+  width: 20%;
+  height: 30%;
   border: 1px #48756d;
   background-color: #6bb4a7;
   border-radius: 5px;
@@ -123,6 +124,7 @@ ul li a {
   text-decoration: none;
   padding: 10px;
   text-decoration: none;
+  font-size:20px;
 }
 
 ul li a:hover {
