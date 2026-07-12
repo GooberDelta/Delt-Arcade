@@ -1,11 +1,3 @@
-body {
-  background-image: url("../assets/webpage/bg.png");
-  background-repeat: no-repeat;
-  background-size:cover;
-  background-attachment:fixed;
-  color:aquamarine;
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 ul {
   list-style-type: none;

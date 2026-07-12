@@ -3,15 +3,18 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="../assets/webpage/favicon.png">
-    <link rel="stylesheet" href="/css/dashboard_overview.css">
+    <link rel="stylesheet" href="/css/dashboard_admin.css">
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/dashboard-admin.js"></script>
     <title>Overview | Delt-Arcade </title>
   </head>
   <body>
       <ul>
-        <li><a href="/dashboard/overview">Overview</a></li>
-        <li><a href="/dashboard/cards">Your Cards</a></li>
+        <li><button id="menubutton" onclick="cardmanagearea()">Card Management</button></li>
+        <li><button id="menubutton" onclick="arcademanagearea()">Arcade Management</button></li>
+        <li><button id="menubutton" onclick="gamemanagement()">Game Management</button></li>
+        <li><button id="menubutton" onclick="accountman()">Account Managment</button></li>
+        <li><button id="menubutton" onclick="accountman()">Back to Guest User</button></li>
         <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><p>{User}</p><img src="/assets/webpage/dropdown_arrow.png"></button>
           <div class="dd-content">
             <a href="/dashboard/account">Account Settings</a>

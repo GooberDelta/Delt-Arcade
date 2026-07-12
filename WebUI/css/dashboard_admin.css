@@ -1,34 +1,23 @@
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 9px;
-  border-radius: 3px;
-  overflow: hidden;
-  background-color:#07d4a8;
-}
-
-ul li {
-  float: left;
-}
-ul li a {
-  display:block;
-  color:black;
-  text-align: center;
-  border-radius: 3px;
-  text-decoration: none;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-ul li a:hover {
-  padding-left: 15px;
-  padding-right: 15px;
-  background-color: #05a583;
-}
-
 div.default-message {
-  height: 80%;
-  width: 80%%;
-
+  display:flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background-color: #595959;
+  border-radius: 10px;
+  margin-top: 2%;
+  float:right;
+  border-style: hidden;
 }
 
+#menubutton {
+   background-color:#07d4a8;
+   font-size: 18;
+}
+
+#menubutton:hover {
+   background-color: #05a583;
+
+}
