@@ -28,3 +28,4 @@ function login() {
       errmsg.textContent = "The server cannot be reached, please check the console for more information."
       console.error("Couldn't Connect to server.")
     }
+}

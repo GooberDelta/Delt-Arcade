@@ -2,19 +2,30 @@
 <html lang="">
   <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
-    <link rel="stylesheet" href="/css/dashboard_human.css">
+    <link rel="icon" type="image/png" href="../assets/webpage/favicon.png">
+    <link rel="stylesheet" href="/css/dashboard_overview.css">
     <link rel="stylesheet" href="/css/main.css">
-    <title>Administraiton | Delt-Arcade </title>
+    <script src="/js/dashboard-admin.js"></script>
+    <title>Overview | Delt-Arcade </title>
   </head>
   <body>
       <ul>
-        <li><a href="/dashboard/Overview">Overview</a></li>
-        <li><a href="/dashboard/Cards">Your Cards</a></li>
-        <li><a href="/dashboard/account">Account</a></li>
+        <li><a href="/dashboard/overview">Overview</a></li>
+        <li><a href="/dashboard/cards">Your Cards</a></li>
+        <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><p>{User}</p><img src="/assets/webpage/dropdown_arrow.png"></button>
+          <div class="dd-content">
+            <a href="/dashboard/account">Account Settings</a>
+            <a href="/logout">Log Out</a>
+          </div>
+        </li>
       </ul>
   </body>
+  <div class="default-message">
+    <h1>Welcome to the admin menu, {User}</h1>
+    <h2>Use one of the options above to access the admin settings.</h2>
+  </div>
   <footer>
-    <p2>Made with ❤️ by DeltaDev</p2>
+    <p>Made with ❤️ by DeltaDev</p>
   </footer>
 </html>
+

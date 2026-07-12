@@ -92,8 +92,8 @@ class RegisterUser(BaseModel):
     email: str 
 
 class LoginUser(BaseModel):
-    username: str = Field(..., min_length=3, max_length=20)
-    password: str = Field(..., min_length=6)
+    username: str 
+    password: str 
 
 class UserPublic(BaseModel):
     username: str 
@@ -141,7 +141,7 @@ async def admin_dashboard():
 
 @app.get("/dashboard/admin", tags=["Hosting"])
 async def admin_dashboard():
-    return FileResponse("dashboard_overview.html", media_type="text/html")
+    return FileResponse("dashboard_admin.html", media_type="text/html")
 
 @app.get("/account", tags=["Hosting"])
 async def account_page():
@@ -153,10 +153,11 @@ async def account_page():
 async def login_function(body:LoginUser):
    user_col = db["userData"]
    found_user = user_col.find_one({"username": body.username})
-   if not found_user or not bcrypt.checkpw(body.password.encode(), found_user["hash"]):
-    raise HTTPException(400, "Invalid Credentials")
-    token = jwt.encode({"user_id": found_user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
-    return {"token":token, "user_id":found_user["user_id"]}
+   if not found_user or not bcrypt.checkpw(body.password.encode(), found_user["hash"].encode()):
+        raise HTTPException(400, "Invalid Credentials")
+   token = jwt.encode({"user_id": found_user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
+   return {"token":token, "user_id":found_user["user_id"]}
+
 @app.post("/auth/register")
 async def register_function(body:RegisterUser):
     user_col = db["userData"]
