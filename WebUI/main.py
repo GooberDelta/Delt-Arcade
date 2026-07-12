@@ -41,13 +41,13 @@ import bcrypt
 load_dotenv()
 # Sets some defaults here.
 MONGO_URI = os.environ.get('MONGO_URI')
-SECRET_KEY = os.environ.get('WS_KEY')
+SECRET_KEY = "t0JqrdAbsTnoobKbxk7ZEtP66G4hsXbSQTJiA8itMpWdHmshWywfZWRSDRxcNroc3jOqH7ycm0bKsIBuFQNoVkJK4kI9kbYEFzOozCAGvvXDwQcSym6VcJzjGENv03G7qVZBM7ChEg0RSA9BNipgxRuX4HEPeWTV" # for sanity I am setting my own secret.
 ALGORITHM = "HS256" # Setting an algorithm to encode in for login tokens.
 TOKEN_EXPIRE_HOURS = 8 # Change this based on how long you want tokens to expire.
 
 #Mongo DB Work
 client = pymongo.MongoClient("mongodb://100.127.8.21:27017")
-db = client.get_database('delt-arcade')
+db = client.get_database('Delt-Arcade')
 
 
 # Settings Tags on each for easy knowledge.
@@ -104,63 +104,11 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
-pwd_context = CryptContext(schemes=["bcrypt"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 # Hypothetically, all should work. Do not delete any files, and nothing should go wrong.
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 app.mount("/css", StaticFiles(directory="css"), name="css")
 app.mount("/js", StaticFiles(directory="js"), name="js")
 
-
-
-# Scripts to help with things required for authentication
-def hash_password(password:str) -> str:
-    # Hashes password for whenever registration happens
-    return pwd_context.hash(password)
-
-def verify_password(plain: str, hashed: str) -> bool:
-    # Returns True or False whenever verified.
-    return pwd_context.verify(plain, hashed)
-
-def create_token(data: dict, expires_hours: int = TOKEN_EXPIRE_HOURS) -> str:
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(hours=expires_hours)
-    to_encode.update({"exp":expire})
-    return jwt.encde(to_encode, SECRET_KEY, ALGORITHM)
-
-
-
-def get_user(username:str):
-    col = db.get_collection("UserData")
-    result = col.find_one({"username": username})
-    if result == None:
-        return False
-    else:
-        return result
-
-def authenticate_user(username:str, password:str) -> Optional[dict]:
-    user = get_user(username)
-    if user == False or not verify_password(password, user["hash"]):
-        return None
-    return user
-
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserPublic:
-    cred_exc = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Couldn't validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        username: Optional[str] = payload.get("sub")
-        if username is None:
-            raise cred_exc
-    except PyJWTError:
-        raise cred_exc
-    user = get_user(username)
-    if not user:
-        raise cred_exc
-    return UserPublic(username=user["username"], display_name=user["displayname"])
 
 ## Pages (This is mainly hosting purposes.)
 @app.get("/", tags=["Hosting"])
@@ -203,34 +151,20 @@ async def account_page():
 
 @app.post("/auth/login")
 async def login_function(body:LoginUser):
-    try:    
-        try:
-            # Trying to Connect to server
-            col = db.get_collection("userData")
-        except:
-            raise HTTPException(403, "Couldn't connect to DB")
-        try:
-            # Attempting to check the user.
-            results = col.find_one({"username":body.username})
-            if results != None:
-                # Check the username.
-                if results["username"] == body.username:
-                    # Check the password now.
-                    if verify_password(body.password, results["hash"]):
-                        return create_token()
-
-        except:
-            raise HTTPException(403, "Incorrect Username or password.")
-    except:
-        raise HTTPException(500, "Internal Server Error")
+   user_col = db["userData"]
+   found_user = user_col.find_one({"username": body.username})
+   if not found_user or not bcrypt.checkpw(body.password.encode(), found_user["hash"]):
+    raise HTTPException(400, "Invalid Credentials")
+    token = jwt.encode({"user_id": found_user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
+    return {"token":token, "user_id":found_user["user_id"]}
 @app.post("/auth/register")
 async def register_function(body:RegisterUser):
-    user_col = db["UserData"]
+    user_col = db["userData"]
     # Check for email, and if one is found, send an error.
     if user_col.find_one({"email": body.email}):
         raise HTTPException(status_code=400, detail="Email is already in use.")
     # Checks for username, if one is found, send an error.
-    if user_col.find_one({username: body.username}):
+    if user_col.find_one({"username": body.username}):
         raise HTTPException(status_code=400, detail="Username is already in use.")
 
     # Start building the things needed for the account
@@ -241,10 +175,11 @@ async def register_function(body:RegisterUser):
     user_col.insert_one({
         "user_id": uid,
         "email": body.email,
-        "password": hashed_pw.decode(),
+        "hash": hashed_pw.decode(),
         "token": token,
-        "displayname": user.display_name,
+        "displayname": body.display_name,
         "username": body.username
         })
-    return {"token": token, "user_id": user_id}
+    return {"token": token, "user_id": uid}
+
 

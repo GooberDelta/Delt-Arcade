@@ -39,22 +39,25 @@ function register() {
 		errmsg.style.display = "block";
 		errmsg.textContent = "The passwords do not match.";
 	}
-	console.log("Registration test passed!")
+	else {
+		console.log("Registration test passed!")
 
-	// Sending Data to backend.
-	errmsg.style.display = "none";
-	const response = fetch(uri + "/auth/register", {
-      method: "POST",
-      body: JSON.stringify({
-        username:username.value, 
-        password:pw.value,
-        display_name:displayName.value,
-        email:email.value 
+		// Sending Data to backend.
+		errmsg.style.display = "none";
+		const response = fetch(uri + "/auth/register", {
+      		method: "POST",
+      		body: JSON.stringify({
+        	username:username.value, 
+        	password:pw.value,
+        	display_name:displayName.value,
+        	email:email.value 
         }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    console.log("Sent Data in a POST request.")
-
+      	headers: {
+        	"Content-type": "application/json; charset=UTF-8"
+      		}
+    	});
+    	console.log("Sent Data in a POST request.");
+    	new Promise(r => setTimeout(r, 2000));
+    	window.location("/dashboard/overview");
+    }
 }

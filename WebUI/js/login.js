@@ -16,7 +16,7 @@ function login() {
     })
     console.log(response.status);
     if (response.status == "200 OK") {
-      window.location.href = uri + "/dashboard/overview"
+      window.location("/dashboard/overview")
     }
     else if (response.status == "401 Unauthorized") {
       errmsg.style.display = "block";
@@ -28,6 +28,3 @@ function login() {
       errmsg.textContent = "The server cannot be reached, please check the console for more information."
       console.error("Couldn't Connect to server.")
     }
-    await new Promise(r => setTimeout(r, 000));
-    window.location(uri + "/dashboard/overview")
-}
