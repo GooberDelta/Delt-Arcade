@@ -9,6 +9,9 @@ function arcademanagearea() {
 function accountman() {
     window.location.href = "/admin/account-manager"
 }
+function gamemanagement() {
+    window.location.href = "/admin/game-manager"
+}
 function backtoguest() {
     window.location.href = "/dashboard/overview"
 }

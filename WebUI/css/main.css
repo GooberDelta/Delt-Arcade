@@ -62,9 +62,10 @@ footer p {
 }
 
 button.accountbtn {
-  float: flex;
+  display: flex;
   border:none;
   background-color:#07d4a8;
+  justify-content: right;
 }
 
 h2 {
@@ -96,6 +97,8 @@ ul {
   overflow: hidden;
   background-color:#07d4a8;
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 a.NCE_Link {
@@ -135,3 +138,6 @@ ul li a:active {
   background-color: #03ffcd;
 }
 
+.admin-button {
+  display:none;
+}

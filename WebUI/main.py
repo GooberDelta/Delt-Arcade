@@ -29,12 +29,13 @@ from pydantic import BaseModel, Field
 import jwt
 from jwt import PyJWTError
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter, HTTPException, status, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, status, Depends, Response, Cookie, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 import bcrypt
+from typing import Annotated
 
 
 # Dotenv loading...
@@ -113,11 +114,12 @@ app.mount("/js", StaticFiles(directory="js"), name="js")
 ## Pages (This is mainly hosting purposes.)
 @app.get("/", tags=["Hosting"])
 async def root():
-    return RedirectResponse(url="/login") # URL Redirect to the login
+    return RedirectResponse(url="/auth/cook_login") # URL Redirect to the login
 
 @app.get("/login", tags=["Hosting"])
 async def login_page():
     return FileResponse("login.html", media_type="text/html")
+    
 
 @app.get("/register", tags=["Hosting"])
 async def registration_page():
@@ -161,7 +163,7 @@ async def root():
 
 @app.get("/admin/game-manager", tags=["Hosting"])
 async def root():
-    return FileResponse("dashboard_admin_cardmanage.html", media_type="text/html")
+    return FileResponse("dashboard_admin_gamemanage.html", media_type="text/html")
 
 @app.get("/admin/arcade-manager", tags=["Hosting"])
 async def root():
@@ -169,14 +171,39 @@ async def root():
 
 ## Authentication
 
+@app.get("/auth/cook_login")
+async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
+    user_col = db["userData"]
+    if user_col.find_one({"token": session_token}):
+        return RedirectResponse(url="/dashboard/overview")
+    else:
+        return RedirectResponse(url="/login")
+   
+@app.get("auth/me")
+async def user_info(session_token:Annotated[str| None, Cookie()] = None):
+    if session_token == None:
+        RedirectResponse("/login")
+    else:
+        user_col = db["UserData"]
+        results = user_col.find_one({"token": session_token}) 
+        username = results["username"]
+        display_name = results["displayname"]
+        return({"username": username, "display_name": display_name})
+
+
+
+
+
 @app.post("/auth/login")
-async def login_function(body:LoginUser):
+async def login_function(body:LoginUser, response:Response):
    user_col = db["userData"]
    found_user = user_col.find_one({"username": body.username})
    if not found_user or not bcrypt.checkpw(body.password.encode(), found_user["hash"].encode()):
         raise HTTPException(400, "Invalid Credentials")
+   
    token = jwt.encode({"user_id": found_user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
-   return {"token":token, "user_id":found_user["user_id"]}
+   response.set_cookie(key="session_token", value=token )
+   return {"message":"Login Successful!"}
 
 @app.post("/auth/register")
 async def register_function(body:RegisterUser):
@@ -201,6 +228,7 @@ async def register_function(body:RegisterUser):
         "displayname": body.display_name,
         "username": body.username
         })
+    response.set_cookie(key="session_token",value=token)
     return {"token": token, "user_id": uid}
 
 

@@ -7,7 +7,7 @@ div div.userOverview {
   display:inline-block;
   margin-top: 2%;
   background-color: #595959;
-  height: 650px;
+  height: 30%;
   width: 49.3%;
   border-radius: 5px;
   text-align: center;
@@ -17,7 +17,7 @@ div div.cardOverview {
   margin-top: 2%;
   float:right;
   background-color: #595959;
-  height: 650px;
+  height: 40%;
   width: 49.5%;
   border-radius: 5px;
   text-align: center;
