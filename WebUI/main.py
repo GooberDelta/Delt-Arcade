@@ -20,7 +20,7 @@
 
 
 
-import os, uuid, pymongo
+import os, uuid, pymongo, time
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -167,31 +167,49 @@ async def root():
 
 @app.get("/admin/arcade-manager", tags=["Hosting"])
 async def root():
-    return FileResponse("dashboard_admin_arcademanage.html", media_type="text/html")    
+    return FileResponse("dashboard_admin_arcademanage.html", media_type="text/html") 
+
+@app.get("/logout", tags=["Hosting"])
+async def root():
+    return FileResponse("logout.html", media_type="text/html")   
 
 ## Authentication
 
-@app.get("/auth/cook_login")
+@app.get("/auth/login/cook_login")
 async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
     user_col = db["userData"]
     if user_col.find_one({"token": session_token}):
         return RedirectResponse(url="/dashboard/overview")
     else:
         return RedirectResponse(url="/login")
+
+@app.get("/auth/default/cook_login")
+async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
+    user_col = db["userData"]
+    if user_col.find_one({"token": session_token}):
+        return {"message":"user authed!"}
+    else:
+        return RedirectResponse(url="/login")
    
-@app.get("auth/me")
+@app.get("/auth/me")
 async def user_info(session_token:Annotated[str| None, Cookie()] = None):
     if session_token == None:
         RedirectResponse("/login")
     else:
-        user_col = db["UserData"]
+        user_col = db["userData"]
         results = user_col.find_one({"token": session_token}) 
         username = results["username"]
         display_name = results["displayname"]
         return({"username": username, "display_name": display_name})
 
-
-
+@app.post("/auth/logout")
+async def logout_user(session_token:Annotated[str| None, Cookie()] = None, response:Response = ):
+    # Grabs column, Updates token in DB, and then removes the cookie from the person requesting.
+    user_col = db["userData"]
+    query = {"token": session_token}
+    user_col.update_one(query, {"$set": {'token': ''}})
+    response.delete_cookie(key="session_token")
+    return({"Message": "User was logged out successfully!"})
 
 
 @app.post("/auth/login")
@@ -206,7 +224,7 @@ async def login_function(body:LoginUser, response:Response):
    return {"message":"Login Successful!"}
 
 @app.post("/auth/register")
-async def register_function(body:RegisterUser):
+async def register_function(body:RegisterUser, response:Response):
     user_col = db["userData"]
     # Check for email, and if one is found, send an error.
     if user_col.find_one({"email": body.email}):
@@ -229,6 +247,6 @@ async def register_function(body:RegisterUser):
         "username": body.username
         })
     response.set_cookie(key="session_token",value=token)
-    return {"token": token, "user_id": uid}
+    return({"message":"User is now registered!"})
 
 

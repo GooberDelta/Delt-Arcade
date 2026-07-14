@@ -30,7 +30,7 @@ async function login() {
 
 function authcheck () {
   let cookies = document.cookies
-  fetch("/auth/cook_login", {
+  fetch("/auth/login/cook_login", {
     method: 'GET',
     credentials: 'include',
   })
