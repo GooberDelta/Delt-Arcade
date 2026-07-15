@@ -1,17 +1,30 @@
 div.default-message {
   display:flex;
+  flex-direction: row;
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  border-radius: 10px;
+  margin-top: 2%;
+  float:right;
+  border-style: hidden;
+  height: 74%;
+  width: 99%;
+}
+
+div.submenu {
+  display:flex;
   flex-direction: column;
   position: absolute;
-  top: 50%;
-  left: 50%;
   transform: translate(-50%,-50%);
   background-color: #595959;
   border-radius: 10px;
   margin-top: 2%;
   float:right;
   border-style: hidden;
-  height: 40%;
-  width: 60%;
+  height: 25%;
+  width: 25%;
 }
 
 #menubutton {

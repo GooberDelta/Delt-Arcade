@@ -15,3 +15,16 @@ function cookie_check() {
     .then(response => response.json())
     .then(data => console.log(data))
 }
+
+async function gud() {
+  const response = await fetch("/auth/me", {
+    method: 'GET',
+    credentials: 'include'
+  })
+  const userinfo = response.json()
+  let displayName = userinfo.displayName
+  let username = userinfo.username
+  let name = userinfo.name
+  let admincheck = userinfo.isAdmin
+  
+}

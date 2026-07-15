@@ -114,7 +114,7 @@ app.mount("/js", StaticFiles(directory="js"), name="js")
 ## Pages (This is mainly hosting purposes.)
 @app.get("/", tags=["Hosting"])
 async def root():
-    return RedirectResponse(url="/auth/cook_login") # URL Redirect to the login
+    return RedirectResponse(url="/auth/login/cook_login") # URL Redirect to the login
 
 @app.get("/login", tags=["Hosting"])
 async def login_page():
@@ -203,7 +203,7 @@ async def user_info(session_token:Annotated[str| None, Cookie()] = None):
         return({"username": username, "display_name": display_name})
 
 @app.post("/auth/logout")
-async def logout_user(session_token:Annotated[str| None, Cookie()] = None, response:Response = ):
+async def logout_user(response:Response, session_token:Annotated[str| None, Cookie()] = None):
     # Grabs column, Updates token in DB, and then removes the cookie from the person requesting.
     user_col = db["userData"]
     query = {"token": session_token}
@@ -217,8 +217,9 @@ async def login_function(body:LoginUser, response:Response):
    user_col = db["userData"]
    found_user = user_col.find_one({"username": body.username})
    if not found_user or not bcrypt.checkpw(body.password.encode(), found_user["hash"].encode()):
+        
         raise HTTPException(400, "Invalid Credentials")
-   
+   print(str(body.password))
    token = jwt.encode({"user_id": found_user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
    response.set_cookie(key="session_token", value=token )
    return {"message":"Login Successful!"}
@@ -245,6 +246,8 @@ async def register_function(body:RegisterUser, response:Response):
         "token": token,
         "displayname": body.display_name,
         "username": body.username
+        "name": body.name
+        "isAdmin": False
         })
     response.set_cookie(key="session_token",value=token)
     return({"message":"User is now registered!"})

@@ -9,18 +9,16 @@ body {
 
 
 footer {
-  position: fixed;
-  bottom: 0;
-  left:0;
+  position: relative;
   width: 100%;
   z-index:-100;
   border-top-style: solid;
   border-radius: 3px;
   border-width: 5px;
   border-color:aquamarine;
-  justify-content: center;
   text-align: center;
   font-size:20px;
+  margin-top: 1%
 }
 
 footer p {

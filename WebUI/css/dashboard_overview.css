@@ -5,20 +5,22 @@ div {
 
 div div.userOverview {
   display:inline-block;
-  margin-top: 2%;
+  margin-top: 1%;
   background-color: #595959;
   height: 30%;
   width: 49.3%;
   border-radius: 5px;
   text-align: center;
+  padding-bottom: 26%;
 }
 
 div div.cardOverview {
-  margin-top: 2%;
+  margin-top: 1%;
   float:right;
   background-color: #595959;
   height: 40%;
   width: 49.5%;
   border-radius: 5px;
   text-align: center;
+  padding-bottom: 27.3%;
 }

@@ -13,13 +13,13 @@ async function login() {
       }
     })
     console.log("Status Code: " + response.status);
-    if (response.status = "200") {
+    if (response.status == 200) {
       window.location.href = "/dashboard/overview"
     }
-    else if (response.status == "401") {
+    else if (response.status == 400) {
       errmsg.style.display = "block";
-      errmsg.textContent = "Unauthorized"
-      console.error("The server responded with 401.")
+      errmsg.textContent = "Invalid Credentials"
+      console.error("The server responded with 400.")
     }
     else {
       console.error("Couldn't Connect to server.")
