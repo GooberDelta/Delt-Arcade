@@ -139,3 +139,7 @@ ul li a:active {
 .admin-button {
   display:none;
 }
+
+.profile_picture {
+  margin-right: 10px;
+}

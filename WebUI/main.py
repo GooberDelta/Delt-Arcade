@@ -199,8 +199,10 @@ async def user_info(session_token:Annotated[str| None, Cookie()] = None):
         user_col = db["userData"]
         results = user_col.find_one({"token": session_token}) 
         username = results["username"]
-        display_name = results["displayname"]
-        return({"username": username, "display_name": display_name})
+        displayName = results["displayname"]
+        name = results["name"]
+        isadmin = results["isAdmin"]
+        return({"username": username, "display_name": displayName, "name":name, "isAdmin": isadmin})
 
 @app.post("/auth/logout")
 async def logout_user(response:Response, session_token:Annotated[str| None, Cookie()] = None):
@@ -217,11 +219,10 @@ async def login_function(body:LoginUser, response:Response):
    user_col = db["userData"]
    found_user = user_col.find_one({"username": body.username})
    if not found_user or not bcrypt.checkpw(body.password.encode(), found_user["hash"].encode()):
-        
         raise HTTPException(400, "Invalid Credentials")
-   print(str(body.password))
    token = jwt.encode({"user_id": found_user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
    response.set_cookie(key="session_token", value=token )
+   user_col.update_one({"username":body.username},{"$set": {"token": token}})
    return {"message":"Login Successful!"}
 
 @app.post("/auth/register")
@@ -245,8 +246,8 @@ async def register_function(body:RegisterUser, response:Response):
         "hash": hashed_pw.decode(),
         "token": token,
         "displayname": body.display_name,
-        "username": body.username
-        "name": body.name
+        "username": body.username,
+        "name": body.name,
         "isAdmin": False
         })
     response.set_cookie(key="session_token",value=token)
