@@ -6,22 +6,23 @@
     <link rel="stylesheet" href="/css/dashboard_admin.css">
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/dashboard-admin.js"></script>
+    <script src="/js/disclaimer.js"></script>
     <title>Administration | Delt-Arcade </title>
   </head>
   <body>
       <nav>
-        <ul>
+        <ul id="nav">
           <li><button id="menubutton" onclick="cardmanagearea()">Card Management</button></li>
           <li><button id="menubutton" onclick="arcademanagearea()">Arcade Management</button></li>
           <li><button id="menubutton" onclick="gamemanagement()">Game Management</button></li>
           <li><button id="menubutton" onclick="accountman()">Account Managment</button></li>
-          <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><p>{User}</p><img src="/assets/webpage/dropdown_arrow.png"></button>
+           <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><name= id="ddisplay">{User}</name><img src="/assets/webpage/dropdown_arrow.png"></button>
             <div class="dd-content">
               <a href="/dashboard/account">Account Settings</a>
               <a href="/logout">Log Out</a>
             </div>
           </li>
-          <li><button id="menubutton" onclick="backtoguest()">Back to Guest User</button></li>
+          <li><button id="menubutton" onclick="backtoguest()">Back to Dashboard</button></li>
         </ul>
       </nav>
   </body>

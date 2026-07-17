@@ -27,8 +27,10 @@ async function gud() {
     const newitem = document.createElement("li")
     newitem.innerHTML = '<a class="admin-button" href="/admin">Admin Panel</a>' //Adds the custom button
   }
-  displayNametext.innerHTML = displayName
-  usernametext.innerHTML = "@" + username
-  nametext.innerHTML = name
-  dddisplay.innerHTML = username + '</name><img src="/assets/webpage/dropdown_arrow.png"></button>'
+  try {displayNametext.innerHTML = displayName}
+  catch{}
+  try {usernametext.innerHTML = "@" + username}
+  catch{}
+  try{dddisplay.innerHTML = username + '</name><img src="/assets/webpage/dropdown_arrow.png"></button>'}
+  catch{}
 }

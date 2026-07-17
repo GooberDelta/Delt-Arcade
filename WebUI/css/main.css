@@ -87,7 +87,7 @@ img.profile_picture_overview {
   margin-left: 15px;
 }
 
-ul {
+ul#nav {
   list-style-type: none;
   margin: 0;
   padding: 16px;

@@ -5,30 +5,39 @@
     <link rel="icon" type="image/png" href="../assets/webpage/favicon.png">
     <link rel="stylesheet" href="/css/dashboard_admin_arcademanage.css">
     <link rel="stylesheet" href="/css/main.css">
-    <script src="/js/dashboard-admin_arcademanage.js"></script>
-    <script src="/js/dashboard-admin.js"></script>
-    <title>Administration | Delt-Arcade </title>
+    <title> Arcade Settings | Admin | Delt-Arcade </title>
+    <script src="/js/dashboard-admin_accountmanage.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/disclaimer.js"></script>
+    <script>authcheck()</script>
+    <script>gud()</script>
   </head>
   <body>
-      <nav>
-        <ul>
-          <li><button id="menubutton" onclick="cardmanagearea()">Card Management</button></li>
+      <ul id="nav">
+          <li><button id="menubutton" onclick="cardmanagement()">Card Management</button></li>
           <li><button id="menubutton" onclick="arcademanagearea()">Arcade Management</button></li>
           <li><button id="menubutton" onclick="gamemanagement()">Game Management</button></li>
           <li><button id="menubutton" onclick="accountman()">Account Managment</button></li>
-          <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><p>{User}</p><img src="/assets/webpage/dropdown_arrow.png"></button>
+           <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><name= id="ddisplay">{User}</name><img src="/assets/webpage/dropdown_arrow.png"></button>
             <div class="dd-content">
               <a href="/dashboard/account">Account Settings</a>
               <a href="/logout">Log Out</a>
             </div>
           </li>
-          <li><button id="menubutton" onclick="backtoguest()">Back to Guest User</button></li>
+          <li><button id="menubutton" onclick="backtoguest()">Back to Dashboard</button></li>
         </ul>
-      </nav>
   </body>
-  <div class="default-message">
-    <h1>Welcome to the admin menu, {User}</h1>
-    <h2>Use one of the options above to access the admin settings.</h2>
+  <div >
+    <h1>Arcade Settings</h1>
+    <p class="fieldlabel">Arcade Logo</p>
+    <button class="menubutton"><img src="/assets/webpage/logo.png"></button>
+    <p class="fieldlabel">Arcade Name</p>
+    <input class="fields" type="text" placeholder="Delt-Arcade">
+    <p class="fieldlabel">Location</p>
+    <input class="fields" type="text" placeholder="123 Nabala St, Rhythmsphere, RG", style="width: 300px;">
+    <p class="fieldlabel">About</p>
+    <input class="fields" type="text" placeholder="An arcade that is running Delt-Arcade! Can you believe it?" style="height:300px;width: 500px;"><br><br>
+    <button class="submitInfo">Save Changes</button>
   </div>
   <footer>
     <p>Made with ❤️ by DeltaDev</p>

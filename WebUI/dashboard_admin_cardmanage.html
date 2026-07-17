@@ -5,30 +5,64 @@
     <link rel="icon" type="image/png" href="../assets/webpage/favicon.png">
     <link rel="stylesheet" href="/css/dashboard_admin_cardmanage.css">
     <link rel="stylesheet" href="/css/main.css">
+    <title>Card Manager | Admin | Delt-Arcade </title>
     <script src="/js/dashboard-admin_cardmanage.js"></script>
-    <script src="/js/dashboard-admin.js"></script>
-    <title>Administration | Delt-Arcade </title>
+    <script src="/js/main.js"></script>
+    <script src="/js/disclaimer.js"></script>
+    <script>authcheck()</script>
+    <script>gud()</script>
   </head>
   <body>
-      <nav>
-        <ul>
-          <li><button id="menubutton" onclick="cardmanagearea()">Card Management</button></li>
+      <ul id="nav">
+          <li><button id="menubutton" onclick="cardmanagement()">Card Management</button></li>
           <li><button id="menubutton" onclick="arcademanagearea()">Arcade Management</button></li>
           <li><button id="menubutton" onclick="gamemanagement()">Game Management</button></li>
           <li><button id="menubutton" onclick="accountman()">Account Managment</button></li>
-          <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><p>{User}</p><img src="/assets/webpage/dropdown_arrow.png"></button>
+           <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><name= id="ddisplay">{User}</name><img src="/assets/webpage/dropdown_arrow.png"></button>
             <div class="dd-content">
               <a href="/dashboard/account">Account Settings</a>
               <a href="/logout">Log Out</a>
             </div>
           </li>
-          <li><button id="menubutton" onclick="backtoguest()">Back to Guest User</button></li>
+          <li><button id="menubutton" onclick="backtoguest()">Back to Dashboard</button></li>
         </ul>
-      </nav>
   </body>
-  <div class="default-message">
-    <h1>Welcome to the admin menu, {User}</h1>
-    <h2>Use one of the options above to access the admin settings.</h2>
+  <div>
+    <div class="cardList">
+      <p class="header">Cards assigned to account</p>
+      <div class="list">
+        <ul class="cardList">
+            <!--- <p class="No_Card_Error"> There are no cards currently assigned to this profile.</p> --->
+            <p> DISCLAIMER: No cards are actually on the server, this is UI work. </p>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">000067676767</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">000989898123</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">000067676767</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">000989898123</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">000067676767</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">000989898123</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">000067676767</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">000989898123</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">000067676767</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">000989898123</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">000067676767</p></button></l1>
+            <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">000989898123</p></button></l1>
+        </ul>
+        <button class="general">Save Changes</button>    
+      </div>  
+    </div>
+    <div class="cardOverview">
+      <h1>Currently Selected Card</h1>
+      <p> DISCLAIMER: No card is actually selected. This is UI work.</p>
+      <p>Test Card Purple (000067676767)</p>
+      <img src="/assets/webpage/card_purple.png" style="height:150px">
+      <p id ="bal">Balance: <b><bal id="baltext">918</bal> Credits</b></p>
+      <p class="label">Select Owner (username input)</p>
+      <input type="text" id="owner">
+      <p class="label">Balance on Card</p>
+      <input type="text" id="bal"><br><br>
+      <button class="general">Save Changes</button>
+      
+    </div>
   </div>
   <footer>
     <p>Made with ❤️ by DeltaDev</p>

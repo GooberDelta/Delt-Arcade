@@ -2,25 +2,55 @@
 <html lang="">
   <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
-    <link rel="stylesheet" href="/css/dashboard_human.css">
+    <link rel="icon" type="image/png" href="../assets/webpage/favicon.png">
+    <link rel="stylesheet" href="/css/dashboard_cards.css">
     <link rel="stylesheet" href="/css/main.css">
-    <title>My Cards | Delt-Arcade </title>
+    <title>Cards | Delt-Arcade </title>
+    <script src="/js/dashboard-overview.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/disclaimer.js"></script>
+    <script>authcheck()</script>
+    <script>gud()</script>
   </head>
   <body>
       <ul id = "nav">
-        <li><a href="/dashboard/overview">Overview</a></li>
-        <li><a href="/dashboard/cards">Your Cards</a></li>
-        <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><p>{User}</p><img src="/assets/webpage/dropdown_arrow.png"></button>
+        <li><a class="NCE_LINK" href="/dashboard/overview">Overview</a></li>
+        <li><a class="NCE_LINK" href="/dashboard/cards">Your Cards</a></li>
+        <li class="accountbtn"><button class="accountbtn"><img class="profile_picture" src="/assets/profile_picture/default.png"><name= id="ddisplay">{User}</name><img src="/assets/webpage/dropdown_arrow.png"></button>
           <div class="dd-content">
             <a href="/dashboard/account">Account Settings</a>
             <a href="/logout">Log Out</a>
           </div>
-        </li>
         <li><a class="admin-button" href="/admin">Admin Panel</a></li>
+        </li>
       </ul>
   </body>
+  <div>
+    <div class="cardList">
+      <p class="header">Cards assigned to account</p>
+      <ul class="cardList">
+        <!--- <p class="No_Card_Error"> There are no cards currently assigned to this profile.</p> --->
+        <p> DISCLAIMER: No cards are actually attached, this is UI work. </p>
+        <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_purple.png" style="height:50px"><p style="padding-right: 20px;">Test Card Purple</p></button></l1>
+          <li class="cardInList"><button class="cardInList"> <img src="/assets/webpage/card_teal.png" style="height:50px"><p style="padding-right: 20px;">Test Card Teal</p></button></l1>
+      </ul>
+    </div>
+    <div class="cardOverview">
+      <h1>Currently Selected Card</h1>
+      <p> DISCLAIMER: No card is actually selected. This is UI work.</p>
+      <p>Test Card Purple</p>
+      <img src="/assets/webpage/card_purple.png" style="height:150px">
+      <p id ="bal">Balance: <b><bal id="baltext">918</bal> Credits</b></p>
+      <button id="transferbutton"> Transfer this card to another account</button>
+      <button id="lockbutton">Lock this Card</button>
+      <button id="removebutton">Remove this card from your account</button>
+      <div class="Cards">
+        
+      </div>
+    </div>
+  </div>
   <footer>
-    <p2>Made with ❤️ by DeltaDev</p2>
+    <p>Made with ❤️ by DeltaDev</p>
   </footer>
 </html>
+
