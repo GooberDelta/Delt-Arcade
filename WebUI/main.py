@@ -61,6 +61,18 @@ tags_metadata = [
     {
         "name": "Authentication",
         "description": "Authenticates users."
+    },
+    {
+        "name": "Cards",
+        "description": "API Related to cards."
+    },
+    {
+        "name": "Games",
+        "description": "API Related to games."
+    },
+    {
+        "name": "Arcade Info",
+        "description": "API Related to arcade info."
     }
 ]
  
@@ -175,7 +187,7 @@ async def root():
 
 ## Authentication
 
-@app.get("/auth/login/cook_login")
+@app.get("/auth/login/cook_login", tags=["Authentication"])
 async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
     user_col = db["userData"]
     if user_col.find_one({"token": session_token}):
@@ -183,7 +195,7 @@ async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
     else:
         return RedirectResponse(url="/login")
 
-@app.get("/auth/default/cook_login")
+@app.get("/auth/default/cook_login", tags=["Authentication"])
 async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
     user_col = db["userData"]
     if user_col.find_one({"token": session_token}):
@@ -191,7 +203,7 @@ async def cookie_read(session_token:Annotated[str| None, Cookie()] = None):
     else:
         return RedirectResponse(url="/login")
    
-@app.get("/auth/me")
+@app.get("/auth/me", tags=["Authentication"])
 async def user_info(session_token:Annotated[str| None, Cookie()] = None):
     if session_token == None:
         RedirectResponse("/login")
@@ -204,7 +216,7 @@ async def user_info(session_token:Annotated[str| None, Cookie()] = None):
         isadmin = results["isAdmin"]
         return({"username": username, "display_name": displayName, "name":name, "isAdmin": isadmin})
 
-@app.post("/auth/logout")
+@app.post("/auth/logout", tags=["Authentication"])
 async def logout_user(response:Response, session_token:Annotated[str| None, Cookie()] = None):
     # Grabs column, Updates token in DB, and then removes the cookie from the person requesting.
     user_col = db["userData"]
@@ -214,7 +226,7 @@ async def logout_user(response:Response, session_token:Annotated[str| None, Cook
     return({"Message": "User was logged out successfully!"})
 
 
-@app.post("/auth/login")
+@app.post("/auth/login", tags=["Authentication"])
 async def login_function(body:LoginUser, response:Response):
    user_col = db["userData"]
    found_user = user_col.find_one({"username": body.username})
@@ -225,7 +237,7 @@ async def login_function(body:LoginUser, response:Response):
    user_col.update_one({"username":body.username},{"$set": {"token": token}})
    return {"message":"Login Successful!"}
 
-@app.post("/auth/register")
+@app.post("/auth/register", tags=["Authentication"])
 async def register_function(body:RegisterUser, response:Response):
     user_col = db["userData"]
     # Check for email, and if one is found, send an error.
@@ -254,3 +266,69 @@ async def register_function(body:RegisterUser, response:Response):
     return({"message":"User is now registered!"})
 
 
+# Card API
+@app.get("/api/card/{card_id}", tags=["Cards"])
+async def get_card(card_id: int, response:Response):
+    card_col = db["cardData"]
+    card_col.find_one({"id":card_id})
+
+@app.get("/api/card/get_cards", tags=["Cards"])
+async def get_all_cards(user_id: int, response:Response):
+    card_col = db["cardData"]
+    card_col.find({"owner":user_id})
+
+@app.post("/api/card/master/add_card", tags=["Cards"])
+async def master_add_card(card_id: int, response:Response):
+    card_col = db["cardData"]
+    card_col.find_one({"id":card_id})
+
+@app.delete("/api/card/master/remove_card", tags=["Cards"])
+async def master_remove_card(card_id: int, response:Response):
+    card_col = db["cardData"]
+    card_col.find_one({"id":card_id})
+
+@app.post("/api/card/user/add_card", tags=["Cards"])
+async def user_add_card(card_id: int, user_id: str, resaccountponse:Response):
+    card_col = db["cardData"]
+    card_col.find_one({"id":card_id})
+
+@app.delete("/api/card/user/remove_card", tags=["Cards"])
+async def user_remove_card(card_id: int, user_id: str, response:Response):
+    card_col = db["cardData"]
+    card_col.find_one({"id":card_id})
+
+
+# Account API
+@app.post("/api/account/master/edit", tags=["Accounts"])
+async def edit_account():
+    print("WIP")
+
+@app.delete("/api/account/master/remove", tags=["Accounts"])
+async def remove_account():
+    print("WIP")
+
+@app.get("/api/account/{user_id}", tags=["Accounts"])
+async def get_account_info():
+    print("WIP")
+
+# Games API
+@app.post("/api/games/master/edit", tags=["Games"])
+async def edit_game_info():
+    print("WIP")
+
+@app.delete("/api/games/master/remove", tags=["Games"])
+async def remove_game():
+    print("WIP")
+
+@app.get("/api/games/{game_name}", tags=["Games"])
+async def get_game_info():
+    print("WIP")
+
+# Arcade Info API
+@app.post("/api/arcade_info/master/edit", tags=["Arcade Info"])
+async def edit_arcade_info():
+    print("WIP")
+
+@app.get("/api/arcade_info", tags=["Arcade Info"])
+async def get_arcade_info():
+    print("WIP")
