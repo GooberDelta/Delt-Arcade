@@ -20,7 +20,7 @@
 
 
 
-import os, uuid, pymongo, time
+import os, uuid, pymongo, time, json
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -115,6 +115,12 @@ class UserPublic(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+class cardData(BaseModel):
+    card_id: str
+    user_id: str
+    theme: str
+    isMaintanence: bool
 
 
 # Hypothetically, all should work. Do not delete any files, and nothing should go wrong.
@@ -214,7 +220,9 @@ async def user_info(session_token:Annotated[str| None, Cookie()] = None):
         displayName = results["displayname"]
         name = results["name"]
         isadmin = results["isAdmin"]
-        return({"username": username, "display_name": displayName, "name":name, "isAdmin": isadmin})
+        user_id = results["user_id"]
+        pfp_location = results["user_pfp_name"]
+        return({"username": username, "display_name": displayName, "name":name, "isAdmin": isadmin, "user_id":user_id, "user_pfp_location": pfp_location})
 
 @app.post("/auth/logout", tags=["Authentication"])
 async def logout_user(response:Response, session_token:Annotated[str| None, Cookie()] = None):
@@ -267,32 +275,52 @@ async def register_function(body:RegisterUser, response:Response):
 
 
 # Card API
-@app.get("/api/card/{card_id}", tags=["Cards"])
-async def get_card(card_id: int, response:Response):
+@app.get("/api/card/get_card/{card_id}", tags=["Cards"])
+async def master_add_card(card_id: str):
     card_col = db["cardData"]
-    card_col.find_one({"id":card_id})
+    results = card_col.find_one({"id":card_id})
+    if not results:
+        return({"error":"Card was not found."})
+    friendlyName = results["cardFriendlyName"]
+    owner = results["owner"]
+    balance = results["balance"]
+    theme = results["card-look"]
+    ismaintanence = results["isMaintanence"]
+    return({"friendlyName":friendlyName, "owner": owner, "balance": balance, "theme": theme, "isMaintanence": ismaintanence})
 
-@app.get("/api/card/get_cards", tags=["Cards"])
-async def get_all_cards(user_id: int, response:Response):
-    card_col = db["cardData"]
-    card_col.find({"owner":user_id})
+
+@app.get("/api/card/get_cards/{user_id}", tags=["Cards"])
+async def get_all_cards(user_id: str):
+    user_col = db["userData"]
+    user_results = user_col.find_one({"user_id":user_id})
+    if not user_results:
+        return({"error": "User not found."})
+    cards_owned = user_results["cardsOwned"]
+    return({"cardsOwned":cards_owned})
+
 
 @app.post("/api/card/master/add_card", tags=["Cards"])
-async def master_add_card(card_id: int, response:Response):
+async def user_add_card(body:cardData, resaccountponse:Response):
     card_col = db["cardData"]
-    card_col.find_one({"id":card_id})
+    try:
+        card_col.insert_one({
+            "id":body.card_id,
+            "owner":body.user_id,
+            "balance":0.0,
+            "theme": body.theme,
+            "isMaintanence": body.isMaintanence
+        })
+    except:
+        return({"error": "Couldn't make card."})
 
-@app.delete("/api/card/master/remove_card", tags=["Cards"])
-async def master_remove_card(card_id: int, response:Response):
+@app.delete("/api/card/master/remove_card/{card_id}", tags=["Cards"])
+async def master_remove_card(card_id: str):
     card_col = db["cardData"]
-    card_col.find_one({"id":card_id})
+    card_result = card_col.delete_one({"id":card_id})
+    if not card_result:
+        return({"error":"Card Not Found"})
 
-@app.post("/api/card/user/add_card", tags=["Cards"])
-async def user_add_card(card_id: int, user_id: str, resaccountponse:Response):
-    card_col = db["cardData"]
-    card_col.find_one({"id":card_id})
-
-@app.delete("/api/card/user/remove_card", tags=["Cards"])
+@app.delete("/api/card/remove_card", tags=["Cards"])
 async def user_remove_card(card_id: int, user_id: str, response:Response):
     card_col = db["cardData"]
     card_col.find_one({"id":card_id})

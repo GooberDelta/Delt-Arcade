@@ -1,3 +1,7 @@
+body {
+  z-index: -1
+}
+
 div {
   height: 80%;
   width: 100%;
@@ -22,7 +26,7 @@ div div.cardOverview {
   width: 79%;
   border-radius: 5px;
   text-align: center;
-  padding-bottom: 20.1%;
+  padding-bottom: 14.7%;
 }
 
 p.header {
@@ -82,4 +86,12 @@ button#removebutton {
 }
 button#removebutton:hover {
   background-color: rgb(162, 16, 45);
+}
+
+div.bg-fade {
+  height: 100%;
+  width: 100%;
+  opacity: 0.3;
+  z-index: 1000;
+  background-color: black;
 }
