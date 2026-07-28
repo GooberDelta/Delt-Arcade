@@ -7,8 +7,6 @@ async function guifd() {
   const responsej = await response.json();
   const uid = responsej.user_id;
   get_all_cards(uid);
-
-  
 }
 
 
@@ -18,13 +16,21 @@ async function add_card() {
     
     const response = await fetch("/api/card/user/add_card", {
     method: 'POST',
-    body: JSON.stringify({"user_id": userid, "card_id": card_id_elem.value})
+    body: JSON.stringify({"user_id": userid, "card_id": card_id_elem.value, "friendly_name":card_name_elem})
   });
+    const responsej = await response.json()
+    if (responsej.message == "Success") {
+      close_popup();
+      guifd();
+    }
+    else {
+      
+    }
 }
 
 async function theme_output(theme = String) {
   // This is an internal function that will help in the long run. it's pretty simple. Set any themes in here for the card, and then set the filename. i.e. themeName:fileName
-  const theme_list = {teal: 'card_teal.png', purple: 'card_purple.png'}
+  const theme_list = {teal: 'card_teal.png', purple: 'card_purple.png', teal_and_purple: "teal-and-purple-card.png"}
   try {
     return(theme_list[theme])
   }
@@ -35,7 +41,7 @@ async function theme_output(theme = String) {
 
 
 async function get_card_info(card_id = String) {
-  const response = await fetch("/api/card/get_card/000" + card_id);
+  const response = await fetch("/api/card/get_card/" + card_id);
 
   const responsej = await response.json()
   const friendlyName = responsej.friendlyName
@@ -43,7 +49,7 @@ async function get_card_info(card_id = String) {
   const theme = responsej.theme
   console.log(theme)
   const image_file_name = await theme_output(theme)
-  
+  //const web_cid = card_id.substring(6,4)
 
   // Adding/editing the elements.
   const details_area = document.getElementById("card-area")
@@ -62,12 +68,20 @@ async function remove_card() {
     console.log("WIP");
 }
 
+async function close_popup() {
+  const fade_elem_popup = document.getElementById("bg_fade");
+  const forum_elem_popup = document.getElementById("add_forum");
+
+  fade_elem_popup.style.display = "none"
+  forum_elem_popup.style.display = "none"  
+}
+
 async function start_add_process() {
   const fade_elem_popup = document.getElementById("bg_fade");
   const forum_elem_popup = document.getElementById("add_forum");
 
-  fade_elem_popup.style("display:block;")
-  forum_elem_popup.style("display:block;")
+  fade_elem_popup.style.display = "block"
+  forum_elem_popup.style.display = "inline-flex"
 }
 
 async function get_all_cards(uid) {

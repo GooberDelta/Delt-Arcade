@@ -24,3 +24,8 @@ div div.cardOverview {
   text-align: center;
   padding-bottom: 27.3%;
 }
+
+div.card_dashboard_list {
+  display:flex;
+  flex-direction: row;
+}

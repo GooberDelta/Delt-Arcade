@@ -31,9 +31,10 @@ footer p {
   position: absolute;
   width: 200px;
   background-color: #05a583;
-  height: 80px;
+  height: 95px;
   text-align: left;
   z-index: 10000;
+  float:right;
 }
 
 /* Links inside dropdown content */
@@ -50,7 +51,7 @@ footer p {
 }
 
 /* Show the dropdown content on hover */
-.accountbtn:hover:hover .dd-content {
+.accountbtn:hover .dd-content {
   display: block;
 }
 
@@ -59,12 +60,7 @@ footer p {
   background-color: #05a583;
 }
 
-button.accountbtn {
-  display: flex;
-  border:none;
-  background-color:#07d4a8;
-  justify-content: right;
-}
+
 
 h2 {
   text-align: left;
@@ -94,9 +90,6 @@ ul#nav {
   border-radius: 3px;
   overflow: hidden;
   background-color:#07d4a8;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
 }
 
 a.NCE_Link {
@@ -122,7 +115,6 @@ ul li a {
   color:black;
   text-align: center;
   border-radius: 3px;
-  text-decoration: none;
   padding: 10px;
   text-decoration: none;
   font-size:20px;
@@ -135,6 +127,18 @@ ul li a:hover {
 ul li a:active {
   background-color: #03ffcd;
 }
+
+ul li.accountbtn {
+  float:right;
+  
+}
+
+button.accountbtn {
+  background-color:#07d4a8;
+  border-style: none;
+  border-radius: 5px;
+}
+
 
 .admin-button {
   display:none;

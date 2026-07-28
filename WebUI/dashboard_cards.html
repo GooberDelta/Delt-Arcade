@@ -6,17 +6,27 @@
     <link rel="stylesheet" href="/css/dashboard_cards.css">
     <link rel="stylesheet" href="/css/main.css">
     <title>Cards | Delt-Arcade </title>
-    <script src="/js/dashboard-overview.js"></script>
+    <script src="/js/dashboard-cards.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/disclaimer.js"></script>
-    <script src="/js/dashboard-cards.js"></script>
     <script>authcheck()</script>
     <script>gud()</script>
     <script>guifd()</script>
-    
-    
   </head>
   <body>
+    <div class="notification-web" id="web-notification"></div>
+    <img src="/assets/webpage/fade_bg.png" id="bg_fade" style="display: none; position: absolute; top: 0%; left: 0%; width: 100%; height:100%;">
+    <div class="card_forum" id="add_forum" style="display:none;">
+      <h3 class="forum-title">Add a card to your account</h3> 
+      <button class="close-popup-button" onclick="close_popup()"><img src="/assets/webpage/close_button.png"></button>
+      <p class="forum-label">Card ID</p>
+      <input class="input-forum" type="text" placeholder ="1234567">
+      <p class="forum-label">Card PIN</p>
+      <input class="input-forum" type="text" placeholder ="1234", maxlength="4">
+      <p class="forum-label">Card Name</p>
+      <input class="input-forum" type="text" placeholder="Main Card" >
+      <button class="add-card-button-forum" onclick="add_card()">Add Card</button>
+    </div>
       <ul id = "nav">
         <li><a class="NCE_LINK" href="/dashboard/overview">Overview</a></li>
         <li><a class="NCE_LINK" href="/dashboard/cards">Your Cards</a></li>
@@ -40,6 +50,7 @@
         <p id="no-card-select-notify">There is no card currently selected.</p>
           
         </div>
+      <button class="add-card-button" onclick="start_add_process()">Add A Card</button>
       </div>
     </div>
   </body>

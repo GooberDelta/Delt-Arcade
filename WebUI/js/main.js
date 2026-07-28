@@ -39,6 +39,6 @@ async function gud() {
   catch{}
   try{dddisplay.innerHTML = username + '</name><img src="/assets/webpage/dropdown_arrow.png"></button>'}
   catch{}
-  try{pfp.src = "/assets/webpage/" + user_pfp_location}
+  try{pfp.src = "/assets/profile_picture/" + user_pfp_location}
   catch{console.warn("Profile Picture could not be loaded. Attempted to load: " + user_pfp_location)}
 }

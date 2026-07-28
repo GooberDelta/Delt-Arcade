@@ -103,6 +103,7 @@ class RegisterUser(BaseModel):
     password: str
     display_name: Optional[str] = "Delt-Arcade User"
     email: str 
+    name: str
 
 class LoginUser(BaseModel):
     username: str 
@@ -260,6 +261,8 @@ async def register_function(body:RegisterUser, response:Response):
     uid = str(uuid.uuid4())
     token = jwt.encode({"userid":uid}, SECRET_KEY, algorithm=ALGORITHM)
 
+    if body.display_name == "":
+        body.display_name = "Delt-Arcade User"
     user_col.insert_one({
         "user_id": uid,
         "email": body.email,
@@ -268,7 +271,9 @@ async def register_function(body:RegisterUser, response:Response):
         "displayname": body.display_name,
         "username": body.username,
         "name": body.name,
-        "isAdmin": False
+        "isAdmin": False,
+        "cardsOwned": [],
+        "user_pfp_name": "default.png"
         })
     response.set_cookie(key="session_token",value=token)
     return({"message":"User is now registered!"})
@@ -305,26 +310,47 @@ async def user_add_card(body:cardData, resaccountponse:Response):
     try:
         card_col.insert_one({
             "id":body.card_id,
-            "owner":body.user_id,
+            "owner": "none",
             "balance":0.0,
             "theme": body.theme,
             "isMaintanence": body.isMaintanence
         })
     except:
-        return({"error": "Couldn't make card."})
+        return({"error": "Couldn't find card"})
 
 @app.delete("/api/card/master/remove_card/{card_id}", tags=["Cards"])
 async def master_remove_card(card_id: str):
     card_col = db["cardData"]
-    card_result = card_col.delete_one({"id":card_id})
-    if not card_result:
-        return({"error":"Card Not Found"})
+    results = card_col.find_one({"id":card_id})
+    if results:
+        q = {"id":card_id}
+        card_col.delete_one(q)
+    else:
+        return({"error": "Card Not Found"})
 
 @app.delete("/api/card/remove_card", tags=["Cards"])
-async def user_remove_card(card_id: int, user_id: str, response:Response):
+async def user_remove_card(card_id: str, user_id: str, response:Response):
     card_col = db["cardData"]
-    card_col.find_one({"id":card_id})
+    results = card_col.find_one({"id":card_id})
+    if results:
+        q = {"id":card_id}
+        card_col.delete_one(q)
+    else:
+        return({"error": "Card Not Found"})
 
+@app.post("/api/card/user/add_card/", tags=["Cards"])
+async def user_add_card(card_id: str, pin: str, user_id: str, friendly_name: str):
+    card_col = db["cardData"]
+    results = card_col.find_one({"id":card_id})
+    if results:
+        corrpin = results["pin"]
+        if corrpin == pin:
+            q = {"id":card_id}
+            card_col.update_one(q, {"$set": {"owner": user_id, "friendlyName":friendly_name}}) 
+        else:
+            return({"message":"Invalid Pin Sent."})
+    else:
+        return({"message":"Invalid Card Sent"})
 
 # Account API
 @app.post("/api/account/master/edit", tags=["Accounts"])
@@ -333,10 +359,6 @@ async def edit_account():
 
 @app.delete("/api/account/master/remove", tags=["Accounts"])
 async def remove_account():
-    print("WIP")
-
-@app.get("/api/account/{user_id}", tags=["Accounts"])
-async def get_account_info():
     print("WIP")
 
 # Games API

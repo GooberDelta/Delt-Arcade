@@ -1,6 +1,4 @@
-let uri = "http://127.0.0.1:8000"
-
-function register() {
+async function register() {
 	// Form Areas.
 	let username = document.getElementById("username");
 	let displayName = document.getElementById("displayname");
@@ -44,20 +42,32 @@ function register() {
 
 		// Sending Data to backend.
 		errmsg.style.display = "none";
-		const response = fetch(uri + "/auth/register", {
+		const response = await fetch("/auth/register", {
       		method: "POST",
       		body: JSON.stringify({
         	username:username.value, 
         	password:pw.value,
         	display_name:displayName.value,
-        	email:email.value 
+        	email:email.value,
+			name: accname.value
         }),
       	headers: {
         	"Content-type": "application/json; charset=UTF-8"
       		}
     	});
-    	console.log("Sent Data in a POST request.");
-    	new Promise(r => setTimeout(r, 2000));
-    	window.location("/dashboard/overview");
+		const responsej = await response.json()
+		if (await responsej.detail == "Email is already in use.") {
+			errmsg.style.display = "block";
+			errmsg.textContent = "This e-mail is already in use."
+		}
+		else if (await responsej.detail == "Username is already in use.") {
+			errmsg.style.display = "block";
+			errmsg.textContent = "This username is already in use."
+		}
+		else {
+			console.log("Cleared");
+    		setTimeout(function(){window.location.href = "/dashboard/overview"}, 2000);
+		}
+    	
     }
 }

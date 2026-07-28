@@ -88,10 +88,68 @@ button#removebutton:hover {
   background-color: rgb(162, 16, 45);
 }
 
-div.bg-fade {
-  height: 100%;
-  width: 100%;
-  opacity: 0.3;
+
+
+button.add-card-button {
+  width: 20%;
+  height: 45px;
+  background-color: #07d4a8;
+  font-size: 15px;
+  border-radius: 5px;
+
+}
+
+button.add-card-button-forum {
+  position:absolute;
+  top: 86%;
+  width: 20%;
+  height: 45px;
+  background-color: #07d4a8;
+  font-size: 15px;
+  border-radius: 5px;
+
+}
+
+h3.forum-title {
+  position: absolute;
+  top:5%;
+}
+
+button.close-popup-button {
+  position:absolute;
+  top:5%;
+  left:90%;
+  background-color: transparent;
+  border-style: none;
+  border-radius: 5px;
+}
+
+button.close-popup-button:hover {
+  background-color: #393939;
+}
+
+
+div.card_forum {
+  position: absolute;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 25%;
+  left: 35%;
+  width: 30%;
+  height: 50%;
+  background-color: #595959;
   z-index: 1000;
-  background-color: black;
+  border-radius: 5px;
+}
+
+div.web_notification {
+  border-color: #5f0101;
+  background-color: #990202;
+  color:white;
+  border-width: 3px;
+  border-radius: 13px;
+  border-style: solid;
+  width: 300px;
+  display: none;
 }
