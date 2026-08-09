@@ -19,17 +19,6 @@ div.login {
   
 }
 
-#error_message {
-  border-color: #5f0101;
-  background-color: #990202;
-  color:white;
-  border-width: 3px;
-  border-radius: 13px;
-  border-style: solid;
-  width: 300px;
-  display: none;
-}
-
 img.logo {
   filter: drop-shadow(3px 4px 4px #4444dd);
 }

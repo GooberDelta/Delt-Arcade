@@ -58,6 +58,7 @@ async function get_card_info(card_id = String) {
         <p>' + friendlyName + '</p>\
         <img src="/assets/webpage/' + image_file_name + '" style="height:150px">\
         <p id ="bal">Balance: <b><bal id="baltext">' + balance + '</bal> Credits</b></p>\
+        <button id="addcreditbutton", onclick="start_add_credit_process()">Add Credits to card</button>\
         <button id="lockbutton", onclick="lock_card(' + card_id +')">Lock this Card</button>\
         <button id="removebutton" onclick="remove_card(' + card_id +')">Remove this card from your account</button>\
         </div>'
@@ -68,7 +69,7 @@ async function remove_card() {
     console.log("WIP");
 }
 
-async function close_popup() {
+async function close_add_card_popup() {
   const fade_elem_popup = document.getElementById("bg_fade");
   const forum_elem_popup = document.getElementById("add_forum");
 
@@ -83,6 +84,23 @@ async function start_add_process() {
   fade_elem_popup.style.display = "block"
   forum_elem_popup.style.display = "inline-flex"
 }
+
+async function close_add_credit_popup() {
+  const fade_elem_popup = document.getElementById("bg_fade");
+  const forum_elem_popup = document.getElementById("credit_form");
+
+  fade_elem_popup.style.display = "none"
+  forum_elem_popup.style.display = "none"  
+}
+
+async function start_add_credit_process() {
+  const fade_elem_popup = document.getElementById("bg_fade");
+  const forum_elem_popup = document.getElementById("credit_form");
+
+  fade_elem_popup.style.display = "block"
+  forum_elem_popup.style.display = "inline-flex"
+}
+
 
 async function get_all_cards(uid) {
   const response = await fetch("/api/card/get_cards/" + uid, {

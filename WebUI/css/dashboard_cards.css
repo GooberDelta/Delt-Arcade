@@ -58,13 +58,13 @@ button.cardInList:hover {
   border-style: none;
 }
 
-button#transferbutton {
+button#addcreditbutton {
   background-color:rgb(20, 220, 163);
   padding:10px;
   border-radius: 10px;
   border-style: none;
 }
-button#transferbutton:hover {
+button#addcreditbutton:hover {
   background-color: rgb(13, 160, 118);
 }
 
@@ -130,6 +130,20 @@ button.close-popup-button:hover {
 
 
 div.card_forum {
+  position: absolute;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 25%;
+  left: 35%;
+  width: 30%;
+  height: 50%;
+  background-color: #595959;
+  z-index: 1000;
+  border-radius: 5px;
+}
+
+div.card_add_credit_form {
   position: absolute;
   flex-direction: column;
   align-items: center;

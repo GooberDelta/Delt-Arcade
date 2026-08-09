@@ -13,7 +13,7 @@ div.edit {
   margin-top: 2%;
   margin-left: 32%;
   background-color: #595959;
-  height: 650px;
+  height: 661px;
   width: 41%;
   border-radius: 5px;
   text-align: center;
@@ -39,7 +39,50 @@ input {
   color: #ffffff;
 }
 
+button.pfpchange {
+  background: transparent;
+  border-style: none;
+  clip-path: circle(50%);
+}
 
+p#change-text {
+  display:none;
+  opacity:100%;
+  top:10px;
+  left:10px;
+  font-size: 12px;
+  color:white;
+}
+img#upload-image {
+  display:none;
+  height:30px;
+  opacity:100%;
+  margin-left:30px;
+
+}
+
+div.upload_bg {
+  background-color: rgba(0,0,0,0.4);
+  position: absolute;
+  clip-path:circle(50%);
+  height:90px;
+  width:90px;
+  display:none;
+  margin-left:15px;
+}
+
+button.submitbutton {
+  background-color: #07d4a8;
+  width:35%;
+  font-size:20px;
+  padding:15px;
+  border-radius: 5px;
+  border-style: none;
+}
+
+input#image_file {
+  display:none;
+}
 
 
 

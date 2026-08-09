@@ -1,12 +1,18 @@
 // guifd, theme_output, and get_all_cards from dashboard-cards.js, modified for use on dashboard
 async function guifd() {
   // Get User ID and Fetch Data = GUIFD
+
+  // Getting HTML Element for profile picture on main page.
+
   const response = await fetch("/auth/me", {
     method: 'GET',
     credentials: 'include'
   });
   const responsej = await response.json();
   const uid = responsej.user_id;
+  const pfpl = responsej.user_pfp_location
+    const pfpdashboard = document.getElementById("dashboard-profile-picture");
+  pfpdashboard.src = "/assets/profile_picture/" + pfpl
   get_all_cards(uid);
 }
 

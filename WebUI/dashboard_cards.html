@@ -18,7 +18,7 @@
     <img src="/assets/webpage/fade_bg.png" id="bg_fade" style="display: none; position: absolute; top: 0%; left: 0%; width: 100%; height:100%;">
     <div class="card_forum" id="add_forum" style="display:none;">
       <h3 class="forum-title">Add a card to your account</h3> 
-      <button class="close-popup-button" onclick="close_popup()"><img src="/assets/webpage/close_button.png"></button>
+      <button class="close-popup-button" onclick="close_add_card_popup()"><img src="/assets/webpage/close_button.png"></button>
       <p class="forum-label">Card ID</p>
       <input class="input-forum" type="text" placeholder ="1234567">
       <p class="forum-label">Card PIN</p>
@@ -26,6 +26,14 @@
       <p class="forum-label">Card Name</p>
       <input class="input-forum" type="text" placeholder="Main Card" >
       <button class="add-card-button-forum" onclick="add_card()">Add Card</button>
+    </div>
+    <div class="card_add_credit_form" id="credit_form" style="display:none;">
+      <h3 class="forum-title">Add Credits for card</h3> 
+      <button class="close-popup-button" onclick="close_add_credit_popup()"><img src="/assets/webpage/close_button.png"></button>
+      <p class="forum-label">Amount</p>
+      <button class="credit_button" id="25_credit">25 Credits</button><button class="credit_button" id="50_credit"> 50 Credits</button><br>
+      <button class="credit_button" id="100_credit">100 Credits</button><button class="credit_button" id="250_credit"> 250 Credits</button>
+      <button class="add-card-button-forum" onclick="request_step_2()">Continue to payment</button>
     </div>
       <ul id = "nav">
         <li><a class="NCE_LINK" href="/dashboard/overview">Overview</a></li>

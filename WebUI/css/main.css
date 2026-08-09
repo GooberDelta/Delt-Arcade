@@ -147,3 +147,14 @@ button.accountbtn {
 .profile_picture {
   margin-right: 10px;
 }
+
+#error_message {
+  border-color: #5f0101;
+  background-color: #990202;
+  color:white;
+  border-width: 3px;
+  border-radius: 13px;
+  border-style: solid;
+  width: 300px;
+  display: none;
+}

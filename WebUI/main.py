@@ -29,7 +29,7 @@ from pydantic import BaseModel, Field
 import jwt
 from jwt import PyJWTError
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter, HTTPException, status, Depends, Response, Cookie, Request
+from fastapi import FastAPI, APIRouter, HTTPException, status, Depends, Response, Cookie, Request, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -73,6 +73,10 @@ tags_metadata = [
     {
         "name": "Arcade Info",
         "description": "API Related to arcade info."
+    },
+    {
+        "name": "Miscelaneous",
+        "description": "Random things I couldn't find a section for."
     }
 ]
  
@@ -122,6 +126,13 @@ class cardData(BaseModel):
     user_id: str
     theme: str
     isMaintanence: bool
+
+class PrivateUser(BaseModel):
+    username: str
+    password: str
+    display_name: Optional[str] = "Delt-Arcade User"
+    email: str 
+    name: str
 
 
 # Hypothetically, all should work. Do not delete any files, and nothing should go wrong.
@@ -223,7 +234,8 @@ async def user_info(session_token:Annotated[str| None, Cookie()] = None):
         isadmin = results["isAdmin"]
         user_id = results["user_id"]
         pfp_location = results["user_pfp_name"]
-        return({"username": username, "display_name": displayName, "name":name, "isAdmin": isadmin, "user_id":user_id, "user_pfp_location": pfp_location})
+        email = results["email"]
+        return({"username": username, "display_name": displayName, "name":name, "isAdmin": isadmin, "user_id":user_id, "user_pfp_location": pfp_location, "email": email})
 
 @app.post("/auth/logout", tags=["Authentication"])
 async def logout_user(response:Response, session_token:Annotated[str| None, Cookie()] = None):
@@ -305,7 +317,7 @@ async def get_all_cards(user_id: str):
 
 
 @app.post("/api/card/master/add_card", tags=["Cards"])
-async def user_add_card(body:cardData, resaccountponse:Response):
+async def user_add_card(body:cardData):
     card_col = db["cardData"]
     try:
         card_col.insert_one({
@@ -357,6 +369,55 @@ async def user_add_card(card_id: str, pin: str, user_id: str, friendly_name: str
 async def edit_account():
     print("WIP")
 
+@app.post("/api/account/upload_pfp", tags=["Accounts"])
+async def upload_pfp(file:UploadFile = File(), session_token:Annotated[str| None, Cookie()] = None):
+    # changes database and then adds the file (custom handling for the DB)
+    user_col = db["userData"]
+    myq = {"token":session_token}
+    try:
+        user_col.update_one(myq, {"$set": {"user_pfp_name": file.filename}})
+    except Exception as e:
+        return({"message":"Failed to send to database: " + str(e)})
+
+    # Adds the file to the area, but checks if it exists first. if not, append to create, else, just overwrite.
+    path = "./assets/profile_picture/" + file.filename
+    if os.path.isfile("path"):
+        print("debug: file existed, overwritting...")
+        with open(path, "wb") as f:
+            while contents := file.file.read(1024 * 1024):
+             f.write(contents)
+            print(f"debug: wrote to file '{file.filename}")
+            file.file.close()
+            print(f"debug: closed file")
+    else:
+        print("debug: file doesn't exist, creating...")
+        with open(path, "ab") as f:
+            while contents := file.file.read(1024 * 1024):
+                f.write(contents)
+            print(f"debug: wrote to file '{file.filename}")
+            file.file.close()
+            print(f"debug: closed file")
+    return({"message": "Success"})
+
+@app.post("/api/account/user/edit", tags=["Accounts"])
+async def edit_account_user(displayname:str, username:str, email:str, password:str, name:str, session_token:Annotated[str| None, Cookie()] = None):
+    # Looks for Account Via Token
+    usercol = db["userData"]
+    # Checks that the token is valid
+    q = {"token": session_token}
+    results = usercol.find_one(q)
+    if not results:
+        return({"message":"Failed to find User, are you sure you're still logged in?"})
+    # if it finds it, continue here
+    # Check to make sure password is the same. If it isn't, change the password, else, keep it
+    if (password != ""):
+        usercol.update_one(q, {"$set", {"displayName": displayname, "username": username, "password": bcrypt.hashpw(password.encode(), bcrypt.gensalt())}})
+    else:
+        usercol.update_one(q, {"$set", {"displayName": displayname, "username": username, "email": email}})
+
+
+    
+
 @app.delete("/api/account/master/remove", tags=["Accounts"])
 async def remove_account():
     print("WIP")
@@ -382,3 +443,5 @@ async def edit_arcade_info():
 @app.get("/api/arcade_info", tags=["Arcade Info"])
 async def get_arcade_info():
     print("WIP")
+
+
