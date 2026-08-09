@@ -5,6 +5,15 @@
 > You are currently selected onto Rolling Release. This will update as code is updated, and will most likely be broken for some time. I am currently doing a recode to remove Claude Assets.
 
 This is a simple card scanner program that uses an RFID scanner that is PnP and acts like a USB keyboard. This also has an optional WebUI that you can run.
+## TODO
+- [x] Get working WebUI that is non-AI assisted
+- [ ] Setup new scanner program
+- [ ] Figure out how to make a cheap scanner
+- [ ] Push new WebUI Update to main
+- [ ] Add support in CSS for Google WebKit for WebUI
+- [ ] Make UI cleaner
+
+
 
 ## How does it work?
 The program is simple, and works like so: 
