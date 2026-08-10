@@ -3,6 +3,14 @@
 ## A sideproject by Delta for home arcades to add immersion.
 > [!WARNING]
 > You are currently selected onto Rolling Release. This will update as code is updated, and will most likely be broken for some time. I am currently doing a recode to remove Claude Assets.
+>
+
+
+> To give a disclaimer for the new thing added in adding credits. In a later update, this "payment terminal" will be a toggle in 3 states.
+> As of right now, it is forcably on option 2 until options for mock cards are added.
+> - Fake Transaction: Acts as if there is a card on file by the users setup.
+> - No Card Transaction: Will still show payment terminal, but will show a question mark card and say "No Payment Required"
+> - Disabled: If disabled, it will automatically request the tokens.
 
 This is a simple card scanner program that uses an RFID scanner that is PnP and acts like a USB keyboard. This also has an optional WebUI that you can run.
 ## TODO
@@ -12,7 +20,6 @@ This is a simple card scanner program that uses an RFID scanner that is PnP and 
 - [ ] Push new WebUI Update to main
 - [ ] Add support in CSS for Google WebKit for WebUI
 - [ ] Make UI cleaner
-
 
 
 ## How does it work?
